@@ -7,4 +7,32 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_menu_search"
+    />
+
+    <item
+        android:id="@+id/action_home"
+        android:title="Home"
+        android:showAsAction="always"
+        android:icon="@drawable/masterlogo"
+
+    />
+    <item
+        android:id="@+id/action_schedule"
+        android:title="Schedule"
+        android:showAsAction="always"
+        android:icon="@drawable/schedulelogo"
+
+        />
+    <item
+        android:id="@+id/action_scrapbook"
+        android:title="Scrapbook"
+        android:showAsAction="always"
+        android:icon="@drawable/scrapbooklogo"
+        />
 </menu>
