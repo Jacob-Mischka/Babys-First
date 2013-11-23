@@ -8,9 +8,9 @@
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
 
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"></uses-permission>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -30,6 +30,14 @@
             android:name="info.mischka.babysfirst.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="info.mischka.babysfirst.ScheduleScrapbookActivity"
+            android:label="@string/title_activity_schedule_scrapbook"
+            android:parentActivityName="MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
         </activity>
     </application>
 

@@ -6,6 +6,8 @@
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame" >
 
+    <!-- We should use LinearLayouts for the button and corresponding image eventually, but it's good for now-->
+
     <ImageView
         android:layout_width="290dp"
         android:layout_height="144dp"
@@ -24,7 +26,7 @@
         android:contentDescription="@string/calendarDescription"
         android:layout_marginBottom="20dp" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -33,7 +35,8 @@
         android:layout_gravity="center"
         android:textSize="16pt"
         android:layout_marginLeft="50dp"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:onClick="openSchedule"/>
 
     <ImageView
         android:layout_width="70dp"
@@ -45,7 +48,7 @@
         android:layout_marginLeft="120dp"
         android:contentDescription="@string/scrapbookDescription" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -55,8 +58,10 @@
         android:layout_marginTop="80dp"
         android:textSize="16pt"
         android:textIsSelectable="false"
-        android:layout_marginRight="45dp" />
+        android:layout_marginRight="45dp"
+        android:onClick="openScrapbook"/>
 
+    <!-- I think the action bar will have the settings button on it still so I don't think we need this here actually
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,14 +72,16 @@
         android:layout_marginBottom="20dp"
         android:textColor="#6666ff"
         android:textSize="7pt" />
+        -->
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
-        android:id="@+id/textView3"
+        android:id="@+id/logoutButton"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="45dp"
         android:textSize="7pt"
-        android:textColor="#6666ff" />
+        android:textColor="#6666ff"
+        android:onClick="logout"/>
 </FrameLayout>
