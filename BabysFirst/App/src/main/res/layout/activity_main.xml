@@ -4,4 +4,77 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+    <ImageView
+        android:layout_width="290dp"
+        android:layout_height="144dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/materlogoformatted"
+        android:contentDescription="@string/masterLogoDescription" />
+
+    <ImageView
+        android:layout_width="93dp"
+        android:layout_height="76dp"
+        android:id="@+id/imageView2"
+        android:layout_gravity="center|left"
+        android:src="@drawable/calendarlogo"
+        android:layout_marginLeft="35dp"
+        android:contentDescription="@string/calendarDescription"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Schedule "
+        android:id="@+id/scheduleTxt"
+        android:layout_gravity="center"
+        android:textSize="16pt"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="20dp" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="87dp"
+        android:id="@+id/imageView3"
+        android:layout_gravity="center"
+        android:src="@drawable/scrapbookimage"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="120dp"
+        android:contentDescription="@string/scrapbookDescription" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=" Scrapbook"
+        android:id="@+id/textView"
+        android:layout_gravity="center"
+        android:layout_marginTop="80dp"
+        android:textSize="16pt"
+        android:textIsSelectable="false"
+        android:layout_marginRight="45dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Settings"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="20dp"
+        android:textColor="#6666ff"
+        android:textSize="7pt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:id="@+id/textView3"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="45dp"
+        android:textSize="7pt"
+        android:textColor="#6666ff" />
+</FrameLayout>
