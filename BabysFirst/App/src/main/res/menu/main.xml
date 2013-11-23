@@ -11,28 +11,28 @@
     <item
         android:id="@+id/action_search"
         android:title="Search"
-        android:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_menu_search"
     />
 
     <item
         android:id="@+id/action_home"
         android:title="Home"
-        android:showAsAction="always"
+        app:showAsAction="never"
         android:icon="@drawable/masterlogo"
 
     />
     <item
         android:id="@+id/action_schedule"
         android:title="Schedule"
-        android:showAsAction="always"
+        app:showAsAction="never"
         android:icon="@drawable/schedulelogo"
 
         />
     <item
         android:id="@+id/action_scrapbook"
         android:title="Scrapbook"
-        android:showAsAction="always"
+        app:showAsAction="never"
         android:icon="@drawable/scrapbooklogo"
         />
 </menu>
