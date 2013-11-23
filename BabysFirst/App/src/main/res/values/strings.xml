@@ -4,5 +4,8 @@
     <string name="app_name">BabysFirst</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="calendarDescription">Calendar Image</string>
+    <string name="masterLogoDescription">Master Logo Image</string>
+    <string name="scrapbookDescription">Scrapbook Image</string>
 
 </resources>
