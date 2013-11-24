@@ -7,6 +7,7 @@ import android.app.ListActivity;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -45,6 +46,7 @@ import java.util.Locale;
 public class ScheduleScrapbookActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     ScheduleDbHelper mScheduleDbHelper;
+    ScrapbookDbHelper mScrapbookDbHelper;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -66,6 +68,8 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_scrapbook);
         mScheduleDbHelper = new ScheduleDbHelper(this);
+        Intent intent = getIntent();
+        String scheduleScrapbookType = intent.getStringExtra(MainActivity.SCHEDULE_SCRAPBOOK_TYPE);
 
 
         // Set up the action bar.
@@ -101,7 +105,8 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
-
+        if(scheduleScrapbookType.equals("scrapbook"))
+            actionBar.getTabAt(1).select();
     }
 
 
@@ -159,7 +164,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // Show 2 total pages.
             return 2;
         }
 
@@ -408,7 +413,6 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     @Override
     public void onResume(){
         super.onResume();
-        //SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
         setContentView(R.layout.fragment_schedule);
         loadSchedule();
 
@@ -466,8 +470,6 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
     }
 
-    //public static abstract class ScheduleEntry
-
     public class ScheduleDbHelper extends SQLiteOpenHelper{
         public static final int DATABASE_VERSION = 1;
         public static final String DATABASE_NAME = "BabysFirst.db";
@@ -489,6 +491,29 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
         }
     }
+
+    public class ScrapbookDbHelper extends SQLiteOpenHelper{
+        public static final int DATABASE_VERSION = 1;
+        public static final String DATABASE_NAME = "BabysFirst.db";
+
+        public ScrapbookDbHelper(Context context){
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        public void onCreate(SQLiteDatabase db){
+            db.execSQL("CREATE TABLE scrapbook (id INTEGER AUTO_INCREMENT PRIMARY KEY, date TEXT, time TEXT, description TEXT, recurring TEXT);");
+
+        }
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+            db.execSQL("DROP TABLE IF EXISTS scrapbook");
+            onCreate(db);
+
+        }
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
+
+        }
+    }
+
 
 
 

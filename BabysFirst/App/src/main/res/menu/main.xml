@@ -34,5 +34,6 @@
         android:title="Scrapbook"
         app:showAsAction="never"
         android:icon="@drawable/scrapbooklogo"
+
         />
 </menu>

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 public class MainActivity extends ActionBarActivity {
 
+    public final static String SCHEDULE_SCRAPBOOK_TYPE = "info.mischka.babysfirst.TYPE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void openSchedule(View view){
         Intent intent = new Intent(this, ScheduleScrapbookActivity.class);
-        //intent.putExtra( I need to make it actually go to the right page
+        intent.putExtra(SCHEDULE_SCRAPBOOK_TYPE, "schedule");
         startActivity(intent);
 
 
@@ -71,6 +73,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void openScrapbook(View view){
         Intent intent = new Intent(this, ScheduleScrapbookActivity.class);
+        intent.putExtra(SCHEDULE_SCRAPBOOK_TYPE, "scrapbook");
         startActivity(intent);
     }
 
