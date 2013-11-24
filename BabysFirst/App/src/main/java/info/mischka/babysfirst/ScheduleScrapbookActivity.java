@@ -40,6 +40,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_scrapbook);
 
+
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -73,6 +74,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
     }
 
 
