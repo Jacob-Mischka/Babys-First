@@ -1,22 +1,30 @@
 package info.mischka.babysfirst;
 
-import java.util.Locale;
-
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ScheduleScrapbookActivity extends ActionBarActivity implements ActionBar.TabListener {
 
@@ -188,6 +196,79 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
             return rootView;
         }
+    }
+
+    public void addEventClick(View view)
+    {
+        Button btn = (Button)findViewById(R.id.newScheduleEntryButton);
+        setContentView(R.layout.fragment_event_new);
+    }
+
+    public void cancelEventClick(View view)
+    {
+        Button btn = (Button)findViewById(R.id.cancelButton);
+        setContentView(R.layout.fragment_schedule);
+    }
+
+    public class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            //Display Date in EditTxtField
+            EditText myDate = (EditText) findViewById(R.id.enteredDate);
+            myDate.setText("" + month + "/" + day + "/" + year + "");
+        }
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    public class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Display Time in EditTimeField
+
+            String ampm = "AM";
+            if (hourOfDay > 12)
+            {
+                ampm = "PM";
+                hourOfDay = hourOfDay - 12;
+            }
+            EditText myTime = (EditText) findViewById(R.id.enteredTime);
+            myTime.setText("" + hourOfDay + ":" + minute + " " + ampm + "");
+        }
+    }
+
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
 }

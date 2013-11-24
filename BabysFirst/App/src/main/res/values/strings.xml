@@ -15,5 +15,8 @@
     <string name="title_activity_schedule_scrapbook">ScheduleScrapbookActivity</string>
     <string name="title_activity_main_activity2">MainActivity</string>
     <string name="title_activity_scheduile_scrapbook">ScheduileScrapbookActivity</string>
+    <string name="title_activity_new_event">NewEventActivity</string>
+    <string name="new_event_title">New Event Details</string>
+    <string name="date_button_text">Pick</string>
 
 </resources>
