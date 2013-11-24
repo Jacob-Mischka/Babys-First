@@ -6,13 +6,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_event_title"
+        android:text="Edit Event"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal|top"
         android:textSize="14pt"
         android:singleLine="false"
         android:textStyle="bold"
         android:layout_marginTop="10dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:id="@+id/eventEditId"
+        android:text="0"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -139,25 +146,35 @@
         android:layout_marginBottom="100dp"
         android:layout_marginLeft="40dp"/>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom">
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancel"
-        android:id="@+id/cancelButton"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginRight="60dp"
         android:onClick="cancelEventClick"
-        android:layout_marginBottom="15dp" />
+        android:layout_weight="1"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="deleteScheduleEvent"
+        android:text="Delete"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:id="@+id/saveButton"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginLeft="60dp"
-        android:layout_marginBottom="15dp"
-        android:onClick="saveScheduleEvent"/>
+        android:onClick="editScheduleEvent"
+        android:layout_weight="1"/>
+
+    </LinearLayout>
 
 
 

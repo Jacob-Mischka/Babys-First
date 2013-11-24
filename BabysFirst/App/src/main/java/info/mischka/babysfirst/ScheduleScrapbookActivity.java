@@ -1,8 +1,15 @@
 package info.mischka.babysfirst;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -18,15 +25,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class ScheduleScrapbookActivity extends ActionBarActivity implements ActionBar.TabListener {
+
+    ScheduleDbHelper mScheduleDbHelper;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -47,6 +65,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_scrapbook);
+        mScheduleDbHelper = new ScheduleDbHelper(this);
 
 
         // Set up the action bar.
@@ -208,6 +227,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     {
         Button btn = (Button)findViewById(R.id.cancelButton);
         setContentView(R.layout.fragment_schedule);
+        loadSchedule();
     }
 
     public class DatePickerFragment extends DialogFragment
@@ -270,5 +290,206 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
+
+    public void addEventDescription(View view){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if(prev != null){
+            ft.remove(prev);
+
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment newFragment = new DescriptionDialogFragment();
+        newFragment.show(ft, "dialog");
+        EditText eventDescription = (EditText)view.findViewById(R.id.eventDescription);
+        //eventDescription.setText(((DescriptionDialogFragment)newFragment).getDescription().toString());
+
+    }
+
+    public class DescriptionDialogFragment extends DialogFragment{
+        private String eventDescription;
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+            View v = inflater.inflate(R.layout.fragment_dialog, container, false);
+            EditText et = (EditText)v.findViewById(R.id.newEventDescriptionDialog);
+
+            Button button = (Button)v.findViewById(R.id.newEventDescriptionDialogButton);
+
+            return v;
+
+
+        }
+
+        public void saveEventDescription(View view){
+            EditText et = (EditText)view.findViewById(R.id.newEventDescriptionDialog);
+            eventDescription = et.getText().toString();
+
+
+
+        }
+
+        String getDescription(){
+            return eventDescription;
+        }
+
+
+
+    }
+
+    public void saveScheduleEvent(View view){
+        String date, time, description;
+        boolean recurring;
+        //String filename = "schedule";
+        //FileOutputStream fos;
+
+
+        date = ((EditText)findViewById(R.id.enteredDate)).getText().toString();
+        time = ((EditText)findViewById(R.id.enteredTime)).getText().toString();
+        description = ((EditText)findViewById(R.id.eventDescription)).getText().toString();
+
+        recurring = ((CheckBox)findViewById(R.id.checkBox)).isChecked();
+
+        if(date.equals("") || time.equals("") || description.equals("")){
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Error");
+            alertDialog.setMessage("Please enter all fields");
+            //alertDialog.setButton(1, "OK", )
+            alertDialog.show();
+            return;
+
+        }
+
+        SQLiteDatabase db = mScheduleDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("date", date);
+        values.put("time", time);
+        values.put("description", description);
+        values.put("recurring", Boolean.toString(recurring));
+        db.insert("schedule", null, values);
+        db.close();
+        setContentView(R.layout.fragment_schedule);
+        loadSchedule();
+
+    }
+
+    public void editScheduleEvent(View view){
+        SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
+        String id = ((EditText)findViewById(R.id.eventEditId)).getText().toString();
+        String date = ((EditText)findViewById(R.id.enteredDate)).getText().toString();
+        String time = ((EditText)findViewById(R.id.enteredTime)).getText().toString();
+        String description = ((EditText)findViewById(R.id.eventDescription)).getText().toString();
+        boolean recurring = ((CheckBox)findViewById(R.id.checkBox)).isChecked();
+
+        String selection = "id = " + id;
+
+        ContentValues values = new ContentValues();
+        values.put("date", date);
+        values.put("time", time);
+        values.put("description", description);
+        values.put("recurring", Boolean.toString(recurring));
+        db.update("schedule", values, selection, null);
+        setContentView(R.layout.fragment_schedule);
+        loadSchedule();
+
+    }
+
+    public void deleteScheduleEvent(View view){
+        SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
+        String id = ((TextView)findViewById(R.id.eventEditId)).getText().toString();
+        String selection = "id = " + id;
+        db.delete("schedule", selection, null);
+        setContentView(R.layout.fragment_schedule);
+        loadSchedule();
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        //SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
+        setContentView(R.layout.fragment_schedule);
+        loadSchedule();
+
+
+    }
+
+
+    public void loadSchedule(){
+        SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
+        ArrayList<String> scheduleList = new ArrayList<String>();
+        String[] columns = {"id", "date", "time", "description", "recurring"};
+        final Cursor c = db.query("schedule", columns, null, null, null, null, null);
+        c.moveToFirst();
+        if(c.getCount() == 0)
+            return;
+        for(int i = 0; i < c.getCount(); i++){
+            scheduleList.add(c.getString(c.getColumnIndexOrThrow("description")));
+            if(!c.isLast())
+                c.moveToNext();
+        }
+        String desc = c.getString(c.getColumnIndexOrThrow("description"));
+
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scheduleList);
+        ListView listView = (ListView)findViewById(R.id.scheduleList);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                setContentView(R.layout.fragment_event_edit);
+                c.moveToPosition(i);
+                int id = c.getInt(c.getColumnIndexOrThrow("id"));
+                String date = c.getString(c.getColumnIndexOrThrow("date"));
+                String time = c.getString(c.getColumnIndexOrThrow("time"));
+                String description = c.getString(c.getColumnIndexOrThrow("description"));
+                String recurringString = c.getString(c.getColumnIndexOrThrow("recurring"));
+                boolean recurring;
+                if(recurringString.equals("true"))
+                    recurring = true;
+                else
+                    recurring = false;
+                EditText eventEditId = (EditText)findViewById(R.id.eventEditId);
+                EditText enteredDate = (EditText)findViewById(R.id.enteredDate);
+                EditText enteredTime = (EditText)findViewById(R.id.enteredTime);
+                EditText eventDescription = (EditText)findViewById(R.id.eventDescription);
+                CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
+                eventEditId.setText(Integer.toString(id));
+                enteredDate.setText(date);
+                enteredTime.setText(time);
+                eventDescription.setText(description);
+                checkBox.setChecked(recurring);
+
+            }
+        });
+        listView.setAdapter(adapter);
+
+    }
+
+    //public static abstract class ScheduleEntry
+
+    public class ScheduleDbHelper extends SQLiteOpenHelper{
+        public static final int DATABASE_VERSION = 1;
+        public static final String DATABASE_NAME = "BabysFirst.db";
+
+        public ScheduleDbHelper(Context context){
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        public void onCreate(SQLiteDatabase db){
+            db.execSQL("CREATE TABLE schedule (id INTEGER AUTO_INCREMENT PRIMARY KEY, date TEXT, time TEXT, description TEXT, recurring TEXT);");
+
+        }
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+            db.execSQL("DROP TABLE IF EXISTS schedule");
+            onCreate(db);
+
+        }
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
+
+        }
+    }
+
+
 
 }
