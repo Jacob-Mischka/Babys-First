@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_scrapbook_entry"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal|top"
+        android:textSize="14pt"
+        android:singleLine="false"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Title:"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal"
+        android:textSize="10pt"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="65dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/enteredTitle"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="70dp"
+        android:textSize="8pt"
+        android:layout_marginLeft="50dp"
+        android:editable="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Comments:"
+        android:id="@+id/textView4"
+        android:layout_gravity="center"
+        android:layout_marginRight="95dp"
+        android:textSize="10pt"
+        android:textStyle="bold"
+        android:layout_marginBottom="70dp" />
+
+    <EditText
+        android:layout_width="136dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/enteredComments"
+        android:layout_gravity="center"
+        android:layout_marginBottom="74dp"
+        android:layout_marginLeft="50dp"
+        android:editable="false"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/cancelButton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginRight="60dp"
+        android:onClick="cancelEventClick"
+        android:layout_marginBottom="15dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/saveButton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginLeft="60dp"
+        android:layout_marginBottom="15dp"
+        android:onClick="saveScheduleEvent"/>
+
+
+</FrameLayout>

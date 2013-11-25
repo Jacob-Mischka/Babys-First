@@ -3,7 +3,6 @@ package info.mischka.babysfirst;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -36,11 +35,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 public class ScheduleScrapbookActivity extends ActionBarActivity implements ActionBar.TabListener {
