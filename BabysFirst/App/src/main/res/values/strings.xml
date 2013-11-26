@@ -18,6 +18,7 @@
     <string name="title_activity_new_event">NewEventActivity</string>
     <string name="new_scrapbook_entry">New Item Details</string>
     <string name="date_button_text">Pick</string>
-
+    <string name="title_activity_add_edit_schedule">AddEditScheduleActivity</string>
+    <string name="title_activity_add_edit_scrapbook">AddEditScrapbookActivity</string>
 
 </resources>

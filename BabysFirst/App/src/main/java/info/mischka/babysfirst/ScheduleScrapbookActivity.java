@@ -41,6 +41,15 @@ import java.util.Locale;
 
 public class ScheduleScrapbookActivity extends ActionBarActivity implements ActionBar.TabListener {
 
+    public final static String EVENT_ID = "info.mischka.babysfirst.ID";
+    public final static String ADD_EDIT_TYPE = "info.mischka.babysfirst.TYPE";
+    public final static String EVENT_DATE = "info.mischka.babysfirst.DATE";
+    public final static String EVENT_TIME = "info.mischka.babysfirst.TIME";
+    public final static String EVENT_DESC = "info.mischka.babysfirst.DESC";
+    public final static String EVENT_RECURRING = "info.mischka.babysfirst.RECURRING";
+    public final static String EVENT_TITLE = "info.mischka.babysfirst.TITLE";
+    public final static String EVENT_COMMENTS = "info.mischka.babysfirst.COMMENTS";
+
     ScheduleDbHelper mScheduleDbHelper;
     ScrapbookDbHelper mScrapbookDbHelper;
 
@@ -64,6 +73,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_scrapbook);
         mScheduleDbHelper = new ScheduleDbHelper(this);
+        mScrapbookDbHelper = new ScrapbookDbHelper(this);
         Intent intent = getIntent();
         String scheduleScrapbookType = intent.getStringExtra(MainActivity.SCHEDULE_SCRAPBOOK_TYPE);
 
@@ -131,6 +141,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
+
     }
 
     @Override
@@ -155,7 +166,10 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            if(position == 0)
+                return new ScheduleFragment();
+            else
+                return new ScrapbookFragment();
         }
 
         @Override
@@ -177,267 +191,89 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+    public class ScheduleFragment extends Fragment{
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
+            return inflater.inflate(R.layout.fragment_schedule, container, false);
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView;
-            rootView = inflater.inflate(R.layout.fragment_schedule_scrapbook, container, false);
-            if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
-                rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
-            }
-            else{
-                rootView = inflater.inflate(R.layout.fragment_scrapbook, container, false);
-            }
-
-            return rootView;
+        public void onResume(){
+            super.onResume();
+            loadSchedule(getView());
         }
+
+    }
+
+    public class ScrapbookFragment extends Fragment{
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
+
+            return inflater.inflate(R.layout.fragment_scrapbook, container, false);
+        }
+
+        @Override
+        public void onResume(){
+            super.onResume();
+            loadScrapbook(getView());
+        }
+
     }
 
     public void addEventClick(View view)
     {
-        Button btn = (Button)findViewById(R.id.newScheduleEntryButton);
-        setContentView(R.layout.fragment_new_event);
+        Intent intent = new Intent(this, AddEditScheduleActivity.class);
+        intent.putExtra(ADD_EDIT_TYPE, "add");
+        startActivity(intent);
     }
 
-    public void cancelEventClick(View view)
-    {
-        Button btn = (Button)findViewById(R.id.cancelButton);
-        setContentView(R.layout.fragment_schedule);
-        loadSchedule();
-    }
-
-    public class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            //Display Date in EditTxtField
-            EditText myDate = (EditText) findViewById(R.id.enteredDate);
-            myDate.setText("" + month + "/" + day + "/" + year + "");
-        }
-    }
-
-    public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
-    }
-
-    public class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            // Display Time in EditTimeField
-
-            String ampm = "AM";
-            if (hourOfDay > 12)
-            {
-                ampm = "PM";
-                hourOfDay = hourOfDay - 12;
-            }
-            EditText myTime = (EditText) findViewById(R.id.enteredTime);
-            myTime.setText("" + hourOfDay + ":" + minute + " " + ampm + "");
-        }
-    }
-
-    public void showTimePickerDialog(View v) {
-        DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
-
-    public void addEventDescription(View view){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if(prev != null){
-            ft.remove(prev);
-
-        }
-        ft.addToBackStack(null);
-
-        DialogFragment newFragment = new DescriptionDialogFragment();
-        newFragment.show(ft, "dialog");
-        EditText eventDescription = (EditText)view.findViewById(R.id.eventDescription);
-        //eventDescription.setText(((DescriptionDialogFragment)newFragment).getDescription().toString());
+    public void addItemClick(View view){
+        Intent intent = new Intent(this, AddEditScrapbookActivity.class);
+        intent.putExtra(ADD_EDIT_TYPE, "add");
+        startActivity(intent);
 
     }
 
-    public class DescriptionDialogFragment extends DialogFragment{
-        private String eventDescription;
-
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            View v = inflater.inflate(R.layout.fragment_dialog, container, false);
-            EditText et = (EditText)v.findViewById(R.id.newEventDescriptionDialog);
-
-            Button button = (Button)v.findViewById(R.id.newEventDescriptionDialogButton);
-
-            return v;
-
-
-        }
-
-        public void saveEventDescription(View view){
-            EditText et = (EditText)view.findViewById(R.id.newEventDescriptionDialog);
-            eventDescription = et.getText().toString();
-
-
-
-        }
-
-        String getDescription(){
-            return eventDescription;
-        }
-
-
-
-    }
-
-    public void saveScheduleEvent(View view){
-        String date, time, description;
-        boolean recurring;
-        //String filename = "schedule";
-        //FileOutputStream fos;
-
-
-        date = ((EditText)findViewById(R.id.enteredDate)).getText().toString();
-        time = ((EditText)findViewById(R.id.enteredTime)).getText().toString();
-        description = ((EditText)findViewById(R.id.eventDescription)).getText().toString();
-
-        recurring = ((CheckBox)findViewById(R.id.checkBox)).isChecked();
-
-        if(date.equals("") || time.equals("") || description.equals("")){
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Error");
-            alertDialog.setMessage("Please enter all fields");
-            //alertDialog.setButton(1, "OK", )
-            alertDialog.show();
-            return;
-
-        }
-
-        SQLiteDatabase db = mScheduleDbHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put("date", date);
-        values.put("time", time);
-        values.put("description", description);
-        values.put("recurring", Boolean.toString(recurring));
-        db.insert("schedule", null, values);
-        db.close();
-        setContentView(R.layout.fragment_schedule);
-        loadSchedule();
-
-    }
-
-    public void editScheduleEvent(View view){
-        SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
-        String id = ((EditText)findViewById(R.id.eventEditId)).getText().toString();
-        String date = ((EditText)findViewById(R.id.enteredDate)).getText().toString();
-        String time = ((EditText)findViewById(R.id.enteredTime)).getText().toString();
-        String description = ((EditText)findViewById(R.id.eventDescription)).getText().toString();
-        boolean recurring = ((CheckBox)findViewById(R.id.checkBox)).isChecked();
-
-        String selection = "id = " + id;
-
-        ContentValues values = new ContentValues();
-        values.put("date", date);
-        values.put("time", time);
-        values.put("description", description);
-        values.put("recurring", Boolean.toString(recurring));
-        db.update("schedule", values, selection, null);
-        setContentView(R.layout.fragment_schedule);
-        loadSchedule();
-
-    }
-
-    public void deleteScheduleEvent(View view){
-        SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
-        String id = ((TextView)findViewById(R.id.eventEditId)).getText().toString();
-        String selection = "id = " + id;
-        db.delete("schedule", selection, null);
-        setContentView(R.layout.fragment_schedule);
-        loadSchedule();
-
-    }
 
     @Override
     public void onResume(){
         super.onResume();
-        setContentView(R.layout.fragment_schedule);
-        loadSchedule();
+        //setContentView(R.layout.fragment_schedule);
+        //loadSchedule();
 
 
     }
 
 
-    public void loadSchedule(){
+    public void loadSchedule(View view){
         SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
         ArrayList<String> scheduleList = new ArrayList<String>();
         String[] columns = {"id", "date", "time", "description", "recurring"};
         final Cursor c = db.query("schedule", columns, null, null, null, null, null);
+        final Intent intent = new Intent(this, AddEditScheduleActivity.class);
         c.moveToFirst();
-        if(c.getCount() == 0)
+        if(c.getCount() == 0){
+            ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scheduleList);
+            ListView listView = (ListView)view.findViewById(R.id.scheduleList);
+            listView.setAdapter(adapter);
             return;
+
+        }
         for(int i = 0; i < c.getCount(); i++){
             scheduleList.add(c.getString(c.getColumnIndexOrThrow("description")));
             if(!c.isLast())
                 c.moveToNext();
         }
-        String desc = c.getString(c.getColumnIndexOrThrow("description"));
 
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scheduleList);
-        ListView listView = (ListView)findViewById(R.id.scheduleList);
+        ListView listView = (ListView)view.findViewById(R.id.scheduleList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                setContentView(R.layout.fragment_edit_event);
+
+
                 c.moveToPosition(i);
                 int id = c.getInt(c.getColumnIndexOrThrow("id"));
                 String date = c.getString(c.getColumnIndexOrThrow("date"));
@@ -449,66 +285,75 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
                     recurring = true;
                 else
                     recurring = false;
-                EditText eventEditId = (EditText)findViewById(R.id.eventEditId);
-                EditText enteredDate = (EditText)findViewById(R.id.enteredDate);
-                EditText enteredTime = (EditText)findViewById(R.id.enteredTime);
-                EditText eventDescription = (EditText)findViewById(R.id.eventDescription);
-                CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
-                eventEditId.setText(Integer.toString(id));
-                enteredDate.setText(date);
-                enteredTime.setText(time);
-                eventDescription.setText(description);
-                checkBox.setChecked(recurring);
+                intent.putExtra(EVENT_ID, Integer.toString(id));
+                intent.putExtra(ADD_EDIT_TYPE, "edit");
+                intent.putExtra(EVENT_DATE, date);
+                intent.putExtra(EVENT_TIME, time);
+                intent.putExtra(EVENT_DESC, description);
+                intent.putExtra(EVENT_RECURRING, recurring);
+                startActivity(intent);
 
             }
         });
+        db.close();
         listView.setAdapter(adapter);
 
+
     }
 
-    public class ScheduleDbHelper extends SQLiteOpenHelper{
-        public static final int DATABASE_VERSION = 1;
-        public static final String DATABASE_NAME = "BabysFirst.db";
-
-        public ScheduleDbHelper(Context context){
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
-
-        public void onCreate(SQLiteDatabase db){
-            db.execSQL("CREATE TABLE schedule (id INTEGER AUTO_INCREMENT PRIMARY KEY, date TEXT, time TEXT, description TEXT, recurring TEXT);");
-
-        }
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-            db.execSQL("DROP TABLE IF EXISTS schedule");
-            onCreate(db);
+    public void loadScrapbook(View view){
+        SQLiteDatabase db = mScrapbookDbHelper.getReadableDatabase();
+        ArrayList<String> scrapbookList = new ArrayList<String>();
+        String[] columns = {"id", "date", "time", "title", "comments"};
+        final Cursor c = db.query("scrapbook", columns, null, null, null, null, null);
+        final Intent intent = new Intent(this, AddEditScrapbookActivity.class);
+        c.moveToFirst();
+        if(c.getCount() == 0){
+            ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
+            ListView listView = (ListView)view.findViewById(R.id.scrapbookList);
+            listView.setAdapter(adapter);
+            return;
 
         }
-        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
-
+        for(int i = 0; i < c.getCount(); i++){
+            scrapbookList.add(c.getString(c.getColumnIndexOrThrow("title")));
+            if(!c.isLast())
+                c.moveToNext();
         }
+
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
+        ListView listView = (ListView)view.findViewById(R.id.scrapbookList);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                c.moveToPosition(i);
+                int id = c.getInt(c.getColumnIndexOrThrow("id"));
+                String date = c.getString(c.getColumnIndexOrThrow("date"));
+                String time = c.getString(c.getColumnIndexOrThrow("time"));
+                String title = c.getString(c.getColumnIndexOrThrow("title"));
+                String comments = c.getString(c.getColumnIndexOrThrow("comments"));
+                intent.putExtra(EVENT_ID, Integer.toString(id));
+                intent.putExtra(ADD_EDIT_TYPE, "edit");
+                intent.putExtra(EVENT_DATE, date);
+                intent.putExtra(EVENT_TIME, time);
+                intent.putExtra(EVENT_TITLE, title);
+                intent.putExtra(EVENT_COMMENTS, comments);
+                startActivity(intent);
+
+            }
+        });
+        db.close();
+        listView.setAdapter(adapter);
+
+
     }
 
-    public class ScrapbookDbHelper extends SQLiteOpenHelper{
-        public static final int DATABASE_VERSION = 1;
-        public static final String DATABASE_NAME = "BabysFirst.db";
 
-        public ScrapbookDbHelper(Context context){
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
 
-        public void onCreate(SQLiteDatabase db){
-            db.execSQL("CREATE TABLE scrapbook (id INTEGER AUTO_INCREMENT PRIMARY KEY, date TEXT, time TEXT, description TEXT, recurring TEXT);");
 
-        }
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-            db.execSQL("DROP TABLE IF EXISTS scrapbook");
-            onCreate(db);
-
-        }
-        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
-
-        }
-    }
 
 
 

@@ -13,13 +13,6 @@
         android:singleLine="true"
         android:textSize="14pt" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:id="@+id/eventEditId"
-        android:text="0"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +30,8 @@
         android:id="@+id/enteredDate"
         android:layout_alignBottom="@+id/textView2"
         android:layout_toRightOf="@+id/textView2"
-        android:layout_alignRight="@+id/textView" />
+        android:layout_alignRight="@+id/textView"
+        android:editable="false"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -66,7 +60,8 @@
         android:id="@+id/enteredTime"
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignLeft="@+id/enteredDate"
-        android:layout_toLeftOf="@+id/imageView" />
+        android:layout_toLeftOf="@+id/imageView"
+        android:editable="false"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -113,34 +108,42 @@
         android:layout_alignBottom="@+id/textView5"
         android:layout_toRightOf="@+id/textView5"
         android:layout_toLeftOf="@+id/imageView2" />
-
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancel"
         android:onClick="cancelEventClick"
         android:id="@+id/button2"
-        android:layout_marginTop="48dp"
         android:layout_below="@+id/textView5"
-        android:layout_alignLeft="@+id/textView4" />
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_weight="1"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:singleLine="false"
-        android:onClick="editScheduleEvent"
-        android:id="@+id/button3"
-        android:layout_alignTop="@+id/button"
-        android:layout_toLeftOf="@+id/imageView2" />
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Delete"
         android:onClick="deleteScheduleEvent"
-        android:id="@+id/button"
+        android:id="@+id/deleteEventButton"
         android:layout_alignTop="@+id/button2"
-        android:layout_toLeftOf="@+id/button3" />
+        android:layout_toLeftOf="@+id/saveEventButton"
+        android:layout_weight="1"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:singleLine="false"
+            android:onClick="editScheduleEvent"
+            android:id="@+id/saveEventButton"
+            android:layout_alignTop="@+id/deleteEventButton"
+            android:layout_toLeftOf="@+id/imageView2"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
 </RelativeLayout>

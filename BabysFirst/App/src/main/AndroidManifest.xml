@@ -39,6 +39,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
+        <activity
+            android:name="info.mischka.babysfirst.AddEditScheduleActivity"
+            android:label="@string/title_activity_add_edit_schedule"
+            android:parentActivityName="ScheduleScrapbookActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ScheduleScrapbookActivity" />
+        </activity>
+        <activity
+            android:name="info.mischka.babysfirst.AddEditScrapbookActivity"
+            android:label="@string/title_activity_add_edit_scrapbook"
+            android:parentActivityName="ScheduleScrapbookActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ScheduleScrapbookActivity" />
+        </activity>
     </application>
 
 </manifest>
