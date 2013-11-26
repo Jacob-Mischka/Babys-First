@@ -221,7 +221,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     public void addEventClick(View view)
     {
         Button btn = (Button)findViewById(R.id.newScheduleEntryButton);
-        setContentView(R.layout.fragment_event_new);
+        setContentView(R.layout.fragment_new_event);
     }
 
     public void cancelEventClick(View view)
@@ -437,7 +437,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                setContentView(R.layout.fragment_event_edit);
+                setContentView(R.layout.fragment_edit_event);
                 c.moveToPosition(i);
                 int id = c.getInt(c.getColumnIndexOrThrow("id"));
                 String date = c.getString(c.getColumnIndexOrThrow("date"));

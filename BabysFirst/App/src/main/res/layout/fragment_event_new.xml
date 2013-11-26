@@ -6,7 +6,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_event_title"
+        android:text="New Event Details"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal|top"
         android:textSize="14pt"

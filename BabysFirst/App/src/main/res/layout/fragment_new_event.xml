@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Details"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:singleLine="true"
+        android:textSize="14pt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        android:id="@+id/textView2"
+        android:layout_marginTop="38dp"
+        android:textSize="10pt"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enteredDate"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toRightOf="@+id/textView2"
+        android:layout_alignRight="@+id/textView" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/calendarlogo"
+        android:clickable="true"
+        android:onClick="showDatePickerDialog"
+        android:layout_above="@+id/imageView2"
+        android:layout_toRightOf="@+id/saveButton"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time:"
+        android:id="@+id/textView3"
+        android:textSize="10pt"
+        android:layout_below="@+id/textView2"
+        android:layout_alignRight="@+id/textView2" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enteredTime"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignLeft="@+id/enteredDate"
+        android:layout_alignRight="@+id/enteredDate" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:src="@drawable/calendarlogo"
+        android:clickable="true"
+        android:onClick="showTimePickerDialog"
+        android:layout_below="@+id/enteredDate"
+        android:layout_toRightOf="@+id/saveButton"
+        android:layout_alignBottom="@+id/enteredTime" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recurring:"
+        android:id="@+id/textView4"
+        android:textSize="10pt"
+        android:layout_below="@+id/textView3"
+        android:layout_alignRight="@+id/textView5" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_alignLeft="@+id/enteredTime" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description:"
+        android:id="@+id/textView5"
+        android:textSize="10pt"
+        android:layout_below="@+id/checkBox"
+        android:layout_toLeftOf="@+id/checkBox" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/eventDescription"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_toRightOf="@+id/textView5"
+        android:layout_alignRight="@+id/enteredTime" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/cancelButton"
+        android:onClick="cancelEventClick"
+        android:layout_below="@+id/textView5"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_marginTop="52dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/saveButton"
+        android:layout_alignTop="@+id/cancelButton"
+        android:layout_toRightOf="@+id/cancelButton"
+        android:layout_marginLeft="25dp"
+        android:singleLine="false"
+        android:onClick="saveScheduleEvent" />
+
+</RelativeLayout>
