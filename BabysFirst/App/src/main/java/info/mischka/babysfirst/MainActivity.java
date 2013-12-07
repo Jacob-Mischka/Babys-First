@@ -13,9 +13,14 @@ import android.view.ViewGroup;
 public class MainActivity extends ActionBarActivity {
 
     public final static String SCHEDULE_SCRAPBOOK_TYPE = "info.mischka.babysfirst.TYPE";
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
+        System.out.println(username);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -66,6 +71,7 @@ public class MainActivity extends ActionBarActivity {
     public void openSchedule(View view){
         Intent intent = new Intent(this, ScheduleScrapbookActivity.class);
         intent.putExtra(SCHEDULE_SCRAPBOOK_TYPE, "schedule");
+        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         startActivity(intent);
 
 
@@ -74,11 +80,13 @@ public class MainActivity extends ActionBarActivity {
     public void openScrapbook(View view){
         Intent intent = new Intent(this, ScheduleScrapbookActivity.class);
         intent.putExtra(SCHEDULE_SCRAPBOOK_TYPE, "scrapbook");
+        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         startActivity(intent);
     }
 
     public void logout(View view){
-
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
 
     }
 

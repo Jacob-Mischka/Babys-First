@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
         }
 
         public void onCreate(SQLiteDatabase db){
-            db.execSQL("CREATE TABLE schedule (id INTEGER PRIMARY KEY, date TEXT, time TEXT, description TEXT, recurring TEXT);");
+            db.execSQL("CREATE TABLE schedule (id INTEGER PRIMARY KEY, username TEXT, date TEXT, time TEXT, description TEXT, recurring TEXT);");
 
         }
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){

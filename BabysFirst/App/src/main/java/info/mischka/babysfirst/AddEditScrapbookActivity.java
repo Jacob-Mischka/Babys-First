@@ -2,8 +2,13 @@ package info.mischka.babysfirst;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -17,12 +22,21 @@ import android.os.Build;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class AddEditScrapbookActivity extends ActionBarActivity {
 
     ScrapbookDbHelper mScrapbookDbHelper;
     String id, date, time, title, comments;
+    String username;
+
+    private static final String JPEG_FILE_PREFIX = "IMG_";
+    private static final String JPEG_FILE_SUFFIX = ".jpg";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,28 +52,30 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         }
         */
         Intent intent = getIntent();
+        username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
+        if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE) != null){
+            if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("edit")){
+                id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
+                date = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_DATE);
+                time = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_TIME);
+                title = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_TITLE);
+                comments = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_COMMENTS);
+                EditText enteredTitle = (EditText)findViewById(R.id.enteredTitle);
+                EditText enteredComments = (EditText)findViewById(R.id.enteredComments);
+                enteredTitle.setText(title);
+                enteredComments.setText(comments);
 
-        if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("edit")){
-            id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
-            date = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_DATE);
-            time = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_TIME);
-            title = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_TITLE);
-            comments = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_COMMENTS);
-            EditText enteredTitle = (EditText)findViewById(R.id.enteredTitle);
-            EditText enteredComments = (EditText)findViewById(R.id.enteredComments);
-            enteredTitle.setText(title);
-            enteredComments.setText(comments);
 
-
-        }
-        else if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("add")){
-            findViewById(R.id.deleteButton).setVisibility(View.GONE);
-            findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    saveScrapbookItem(view);
-                }
-            });
+            }
+            else if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("add")){
+                findViewById(R.id.deleteButton).setVisibility(View.GONE);
+                findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveScrapbookItem(view);
+                    }
+                });
+            }
         }
 
 
@@ -84,6 +100,15 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        //Intent intent = getIntent();
+        //if()
+
     }
 
     /**
@@ -128,6 +153,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
         ContentValues values = new ContentValues();
         values.put("date", date);
+        values.put("username", username);
         values.put("time", time);
         values.put("title", title);
         values.put("comments", comments);
@@ -152,6 +178,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
         ContentValues values = new ContentValues();
         values.put("title", title);
+        values.put("username", username);
         values.put("comments", comments);
         db.update("scrapbook", values, selection, null);
         db.close();
@@ -166,6 +193,21 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         db.delete("scrapbook", selection, null);
         db.close();
         finish();
+
+    }
+
+    public void addPicture(View view){
+        PackageManager packageManager = getPackageManager();
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> list = packageManager.queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if(list.size() > 0){
+            String imageFileName = JPEG_FILE_PREFIX + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + "_" + JPEG_FILE_SUFFIX;
+            File pictureFile = new File(getFilesDir() + "images/" + imageFileName);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(pictureFile));
+            startActivityForResult(takePictureIntent, 0);
+
+
+        }
 
     }
 

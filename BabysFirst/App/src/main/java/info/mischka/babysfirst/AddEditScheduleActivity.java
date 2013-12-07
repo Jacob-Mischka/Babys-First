@@ -33,6 +33,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
     ScheduleDbHelper mScheduleDbHelper;
     String id, date, time, description;
     boolean recurring;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         }*/
 
         Intent intent = getIntent();
+        username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
+        System.out.println(username);
 
         if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("edit")){
             id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
@@ -140,6 +143,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
 
         ContentValues values = new ContentValues();
         values.put("date", date);
+        values.put("username", username);
         values.put("time", time);
         values.put("description", description);
         values.put("recurring", Boolean.toString(recurring));

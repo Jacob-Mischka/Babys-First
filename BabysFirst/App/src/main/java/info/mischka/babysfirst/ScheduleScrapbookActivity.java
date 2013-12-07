@@ -67,6 +67,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,8 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         mScrapbookDbHelper = new ScrapbookDbHelper(this);
         Intent intent = getIntent();
         String scheduleScrapbookType = intent.getStringExtra(MainActivity.SCHEDULE_SCRAPBOOK_TYPE);
+        username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
+        System.out.println(username);
 
 
         // Set up the action bar.
@@ -225,12 +228,14 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     {
         Intent intent = new Intent(this, AddEditScheduleActivity.class);
         intent.putExtra(ADD_EDIT_TYPE, "add");
+        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         startActivity(intent);
     }
 
     public void addItemClick(View view){
         Intent intent = new Intent(this, AddEditScrapbookActivity.class);
         intent.putExtra(ADD_EDIT_TYPE, "add");
+        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         startActivity(intent);
 
     }
@@ -249,9 +254,11 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     public void loadSchedule(View view){
         SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
         ArrayList<String> scheduleList = new ArrayList<String>();
-        String[] columns = {"id", "date", "time", "description", "recurring"};
-        final Cursor c = db.query("schedule", columns, null, null, null, null, null);
+        String[] columns = {"id", "username", "date", "time", "description", "recurring"};
+        String selection = "username='"+username+"'";
+        final Cursor c = db.query("schedule", columns, selection, null, null, null, null);
         final Intent intent = new Intent(this, AddEditScheduleActivity.class);
+        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         c.moveToFirst();
         if(c.getCount() == 0){
             ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scheduleList);
@@ -304,9 +311,11 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     public void loadScrapbook(View view){
         SQLiteDatabase db = mScrapbookDbHelper.getReadableDatabase();
         ArrayList<String> scrapbookList = new ArrayList<String>();
-        String[] columns = {"id", "date", "time", "title", "comments"};
-        final Cursor c = db.query("scrapbook", columns, null, null, null, null, null);
+        String[] columns = {"id", "username", "date", "time", "title", "comments"};
+        String selection = "username='"+username+"'";
+        final Cursor c = db.query("scrapbook", columns, selection, null, null, null, null);
         final Intent intent = new Intent(this, AddEditScrapbookActivity.class);
+        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         c.moveToFirst();
         if(c.getCount() == 0){
             ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
