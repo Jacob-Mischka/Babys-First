@@ -48,9 +48,13 @@
         android:layout_alignRight="@+id/enteredTitle" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/addPictureButton" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/enteredComments"
+        android:id="@+id/itemImage"
+        android:layout_centerHorizontal="true"/>
+
+
 
     <Button
         android:id="@+id/addPictureButton"
@@ -58,7 +62,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Add picture"
-        android:onClick="addPicture"/>
+        android:onClick="addPicture"
+        android:layout_below="@id/itemImage"/>
+
+
 
     <LinearLayout
         android:layout_width="fill_parent"

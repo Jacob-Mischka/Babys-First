@@ -201,6 +201,11 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
             return inflater.inflate(R.layout.fragment_schedule, container, false);
         }
 
+        public ScheduleFragment(){
+            super();
+
+        }
+
         @Override
         public void onResume(){
             super.onResume();
@@ -214,6 +219,11 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
 
             return inflater.inflate(R.layout.fragment_scrapbook, container, false);
+        }
+
+        public ScrapbookFragment(){
+            super();
+
         }
 
         @Override

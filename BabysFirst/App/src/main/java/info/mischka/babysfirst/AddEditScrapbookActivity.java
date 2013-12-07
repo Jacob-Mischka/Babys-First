@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -21,8 +22,10 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -106,8 +109,26 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     public void onResume(){
         super.onResume();
 
-        //Intent intent = getIntent();
-        //if()
+        String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
+        File pictureFile = new File(getExternalFilesDir(null), imageFileName);
+        ImageView imageView = (ImageView)findViewById(R.id.itemImage);
+
+        if(pictureFile.isFile()){
+
+            imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
+            System.out.println(pictureFile.toString());
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 3){
+
+
+        }
+
 
     }
 
@@ -201,13 +222,29 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         List<ResolveInfo> list = packageManager.queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if(list.size() > 0){
-            String imageFileName = JPEG_FILE_PREFIX + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + "_" + JPEG_FILE_SUFFIX;
-            File pictureFile = new File(getFilesDir() + "images/" + imageFileName);
+            String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
+            File pictureFile = new File(getExternalFilesDir(null), imageFileName);
+            System.out.println(pictureFile.toString());
+            try{
+                pictureFile.createNewFile();
+            }
+            catch(java.io.IOException e){
+                e.printStackTrace();
+
+            }
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(pictureFile));
             startActivityForResult(takePictureIntent, 0);
 
 
         }
+
+    }
+
+    public void addVideo(View view){
+        PackageManager packageManager = getPackageManager();
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        List<ResolveInfo> list = packageManager.queryIntentActivities(takeVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        startActivityForResult(takeVideoIntent, 3);
 
     }
 
