@@ -32,10 +32,12 @@ import java.util.Date;
 import java.util.List;
 
 public class AddEditScrapbookActivity extends ActionBarActivity {
+    //TODO: CONFIRM ON DELETE, save images/videos differently and save the uri in the database
 
     ScrapbookDbHelper mScrapbookDbHelper;
     String id, date, time, title, comments;
     String username;
+    boolean addFromScrapbook = false;
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
@@ -65,8 +67,29 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                 comments = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_COMMENTS);
                 EditText enteredTitle = (EditText)findViewById(R.id.enteredTitle);
                 EditText enteredComments = (EditText)findViewById(R.id.enteredComments);
-                enteredTitle.setText(title);
-                enteredComments.setText(comments);
+                if(title != null)
+                    enteredTitle.setText(title);
+                if(comments != null)
+                    enteredComments.setText(comments);
+
+
+            }
+            else if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("add_from_schedule")){
+                addFromScrapbook = true;
+                id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
+                date = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_DATE);
+                time = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_TIME);
+                comments = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_COMMENTS);
+                EditText enteredComments = (EditText)findViewById(R.id.enteredComments);
+                if(comments != null)
+                    enteredComments.setText(comments);
+                findViewById(R.id.deleteButton).setVisibility(View.GONE);
+                findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveScrapbookItem(view);
+                    }
+                });
 
 
             }
@@ -165,15 +188,23 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         boolean recurring;
         //String filename = "schedule";
         //FileOutputStream fos;
-        Calendar cal = Calendar.getInstance();
+        if(addFromScrapbook){
+            //AddEditScheduleActivity.deleteScheduleEvent(this, id);
 
-        date = cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.DATE)+"/"+cal.get(Calendar.YEAR);
-        time = cal.get(Calendar.HOUR)+":"+cal.get(Calendar.MINUTE)+" "+cal.get(Calendar.AM_PM);
+        }
+        else{
+            Calendar cal = Calendar.getInstance();
+
+            date = cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.DATE)+"/"+cal.get(Calendar.YEAR);
+            time = cal.get(Calendar.HOUR)+":"+cal.get(Calendar.MINUTE)+" "+cal.get(Calendar.AM_PM);
+
+        }
+
         title = ((EditText)findViewById(R.id.enteredTitle)).getText().toString();
         comments = ((EditText)findViewById(R.id.enteredComments)).getText().toString();
 
 
-        if(title.equals("") || comments.equals("")){
+        if(title == null || comments == null || title.equals("") || comments.equals("")){
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Error");
             alertDialog.setMessage("Please enter all fields");
@@ -194,6 +225,8 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         db.insert("scrapbook", null, values);
         db.close();
         finish();
+
+
 
     }
 
@@ -226,6 +259,21 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         String selection = "id = " + id;
         db.delete("scrapbook", selection, null);
         db.close();
+
+        String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
+        File pictureFile = new File(getExternalFilesDir(null), imageFileName);
+        if(pictureFile.isFile()){
+            try{
+                pictureFile.delete();
+
+            }
+            catch(SecurityException e){
+                e.printStackTrace();
+
+            }
+
+        }
+
         finish();
 
     }

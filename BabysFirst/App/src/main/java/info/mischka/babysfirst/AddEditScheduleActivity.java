@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -273,6 +274,28 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         db.delete("schedule", selection, null);
         db.close();
         finish();
+
+    }
+
+    /*
+    public static void deleteScheduleEvent(Context context, String id){
+        SQLiteDatabase db = new ScheduleDbHelper(context).getWritableDatabase();
+        String selection = "id = " + id;
+        db.delete("schedule", selection, null);
+        db.close();
+
+    }*/
+
+    public void addToScrapbook(View view){
+        Intent intent = new Intent(this, AddEditScrapbookActivity.class);
+        intent.putExtra(ScheduleScrapbookActivity.EVENT_DATE, date);
+        intent.putExtra(ScheduleScrapbookActivity.EVENT_TIME, time);
+        intent.putExtra(ScheduleScrapbookActivity.EVENT_COMMENTS, description);
+        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
+        intent.putExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE, "add_from_schedule");
+        intent.putExtra(ScheduleScrapbookActivity.EVENT_ID, id);
+        startActivity(intent);
+
 
     }
 
