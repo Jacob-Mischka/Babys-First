@@ -7,23 +7,20 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
@@ -69,6 +66,14 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         }
         else if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("add")){
             findViewById(R.id.deleteEventButton).setVisibility(View.GONE);
+            Button myDateButton = (Button) findViewById(R.id.dateButton);
+            Button myTimeButton = (Button) findViewById(R.id.timeButton);
+            EditText myDate = (EditText) findViewById(R.id.enteredDate);
+            EditText myTime = (EditText) findViewById(R.id.enteredTime);
+            myDateButton.setText("Set Date");
+            myTimeButton.setText("Set Time");
+            myDate.setVisibility(View.INVISIBLE);
+            myTime.setVisibility(View.INVISIBLE);
             findViewById(R.id.saveEventButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -76,6 +81,12 @@ public class AddEditScheduleActivity extends ActionBarActivity {
                 }
             });
         }
+
+
+
+
+
+
 
     }
 
@@ -175,8 +186,12 @@ public class AddEditScheduleActivity extends ActionBarActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             //Display Date in EditTxtField
+            //Change Date Button Text
             EditText myDate = (EditText) findViewById(R.id.enteredDate);
+            Button myButton = (Button) findViewById(R.id.dateButton);
+            findViewById(R.id.enteredDate).setVisibility(View.VISIBLE);
             myDate.setText("" + month + "/" + day + "/" + year + "");
+            myButton.setText("Change Date");
         }
     }
 
@@ -210,7 +225,11 @@ public class AddEditScheduleActivity extends ActionBarActivity {
                 hourOfDay = hourOfDay - 12;
             }
             EditText myTime = (EditText) findViewById(R.id.enteredTime);
+            Button myButton = (Button) findViewById(R.id.timeButton);
+            findViewById(R.id.enteredTime).setVisibility(View.VISIBLE);
             myTime.setText("" + hourOfDay + ":" + minute + " " + ampm + "");
+            myButton.setText("Change Time");
+
         }
     }
 
