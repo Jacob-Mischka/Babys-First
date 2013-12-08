@@ -17,7 +17,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/masterlogoformatted"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name="info.mischka.babysfirst.LoginActivity"
-            android:label="@string/title_activity_login"
+            android:label="Baby's First"
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
         </activity>
         <activity
             android:name="info.mischka.babysfirst.ScheduleScrapbookActivity"
-            android:label="@string/title_activity_schedule_scrapbook"
+            android:label="Baby's First"
             android:parentActivityName="MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -47,7 +47,7 @@
         </activity>
         <activity
             android:name="info.mischka.babysfirst.AddEditScheduleActivity"
-            android:label="@string/title_activity_add_edit_schedule"
+            android:label="Schedule"
             android:parentActivityName="ScheduleScrapbookActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -55,7 +55,7 @@
         </activity>
         <activity
             android:name="info.mischka.babysfirst.AddEditScrapbookActivity"
-            android:label="@string/title_activity_add_edit_scrapbook"
+            android:label="Scrapbook"
             android:parentActivityName="ScheduleScrapbookActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

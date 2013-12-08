@@ -13,7 +13,7 @@
         android:layout_height="144dp"
         android:id="@+id/imageView"
         android:layout_gravity="center_horizontal|top"
-        android:src="@drawable/materlogoformatted"
+        android:src="@drawable/masterlogoformatted"
         android:contentDescription="@string/masterLogoDescription" />
 
     <ImageView

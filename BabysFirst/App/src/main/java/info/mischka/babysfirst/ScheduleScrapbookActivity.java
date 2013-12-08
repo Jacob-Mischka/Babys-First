@@ -252,14 +252,20 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
         }
 
+        @Override
+        public String toString(){
+            return description;
+
+        }
+
     }
 
 
     public void loadSchedule(View view){
         SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
         ArrayList<String> scheduleList = new ArrayList<String>();
-        ArrayList<ScheduleEntry> scheduleEntryList = new ArrayList<ScheduleEntry>();
-        ArrayList<ScheduleEntry> tempEntryList = new ArrayList<ScheduleEntry>();
+        final ArrayList<ScheduleEntry> scheduleEntryList = new ArrayList<ScheduleEntry>();
+        final ArrayList<ScheduleEntry> tempEntryList = new ArrayList<ScheduleEntry>();
         String[] columns = {"id", "username", "date", "time", "description", "recurring"};
         String selection = "username='"+username+"'";
         final Cursor c = db.query("schedule", columns, selection, null, null, null, null);
@@ -275,46 +281,60 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         }
         for(int i = 0; i < c.getCount(); i++){
             scheduleList.add(c.getString(c.getColumnIndexOrThrow("description")));
-            //tempEntryList.add(new ScheduleEntry(c.getString(c.getColumnIndexOrThrow("id")),c.getString(c.getColumnIndexOrThrow("date")),c.getString(c.getColumnIndexOrThrow("time")),
-            //        c.getString(c.getColumnIndexOrThrow("description")),c.getString(c.getColumnIndexOrThrow("recurring"))));
+            tempEntryList.add(new ScheduleEntry(Integer.toString(c.getInt(c.getColumnIndexOrThrow("id"))),c.getString(c.getColumnIndexOrThrow("date")),c.getString(c.getColumnIndexOrThrow("time")),
+                    c.getString(c.getColumnIndexOrThrow("description")),c.getString(c.getColumnIndexOrThrow("recurring"))));
             if(!c.isLast())
                 c.moveToNext();
         }
 
-        /*
+        System.out.println(tempEntryList.size());
+
+
         for(int i = 0; i < tempEntryList.size(); i++){
-            if(tempEntryList.get(i).date.compareTo(tempEntryList.get(0).date) > 0 ||
-                    ((tempEntryList.get(i).date.compareTo(tempEntryList.get(0).date) == 0) && (tempEntryList.get(i).time.compareTo(tempEntryList.get(0).time) > 0))){
+            for(int j = 0; j < tempEntryList.size(); j++){
 
-                scheduleEntryList.add(0, tempEntryList.get(i));
 
+                if(tempEntryList.get(i).date.compareTo(tempEntryList.get(j).date) > 0 ||
+                        ((tempEntryList.get(i).date.compareTo(tempEntryList.get(j).date) == 0) && (tempEntryList.get(i).time.compareTo(tempEntryList.get(j).time) > 0))){
+
+                    scheduleEntryList.add(0, tempEntryList.get(i));
+
+                }
             }
 
-        }*/
+        }
+
+        //class ScheduleArrayAdapter<T> extends ArrayAdapter<T>{
 
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scheduleList);
+        //}
+
+
+
+
+        ArrayAdapter adapter = new ArrayAdapter<ScheduleEntry>(this, android.R.layout.simple_list_item_1, tempEntryList);
         ListView listView = (ListView)view.findViewById(R.id.scheduleList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-
+                /*
                 c.moveToPosition(i);
                 int id = c.getInt(c.getColumnIndexOrThrow("id"));
                 String date = c.getString(c.getColumnIndexOrThrow("date"));
                 String time = c.getString(c.getColumnIndexOrThrow("time"));
                 String description = c.getString(c.getColumnIndexOrThrow("description"));
                 String recurringString = c.getString(c.getColumnIndexOrThrow("recurring"));
+                */
 
-                /*
-                String id = scheduleEntryList.get(i).id;
-                String date = scheduleEntryList.get(i).date;
-                String time = scheduleEntryList.get(i).time;
-                String description = scheduleEntryList.get(i).description;
-                String recurringString = scheduleEntryList.get(i).recurring;
 
-                 */
+                String id = tempEntryList.get(i).id;
+                String date = tempEntryList.get(i).date;
+                String time = tempEntryList.get(i).time;
+                String description = tempEntryList.get(i).description;
+                String recurringString = tempEntryList.get(i).recurring;
+
+
 
                 boolean recurring;
                 if(recurringString.equals("true"))
@@ -325,7 +345,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
 
                 //and fix id datatype
-                intent.putExtra(EVENT_ID, Integer.toString(id));
+                intent.putExtra(EVENT_ID, id);
                 intent.putExtra(ADD_EDIT_TYPE, "edit");
                 intent.putExtra(EVENT_DATE, date);
                 intent.putExtra(EVENT_TIME, time);
