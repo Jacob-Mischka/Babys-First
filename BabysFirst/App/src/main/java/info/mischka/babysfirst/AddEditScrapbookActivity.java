@@ -124,7 +124,20 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 3){
+        if(requestCode == 0){
+            String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
+            File pictureFile = new File(getExternalFilesDir(null), imageFileName);
+            ImageView imageView = (ImageView)findViewById(R.id.itemImage);
+
+            if(pictureFile.isFile()){
+
+                imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
+                System.out.println(pictureFile.toString());
+            }
+
+        }
+
+        else if(requestCode == 3){
 
 
         }
@@ -222,6 +235,8 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         List<ResolveInfo> list = packageManager.queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if(list.size() > 0){
+            if(id == null)
+                id = "1";
             String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
             File pictureFile = new File(getExternalFilesDir(null), imageFileName);
             System.out.println(pictureFile.toString());
