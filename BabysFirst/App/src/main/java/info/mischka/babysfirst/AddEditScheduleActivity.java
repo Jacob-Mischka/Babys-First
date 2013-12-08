@@ -224,10 +224,18 @@ public class AddEditScheduleActivity extends ActionBarActivity {
                 ampm = "PM";
                 hourOfDay = hourOfDay - 12;
             }
+
+            String modMinute = Integer.toString(minute);
+            int length = String.valueOf(minute).length();
+
+            if (length < 2)
+            {
+                modMinute = ("0" + modMinute);
+            }
             EditText myTime = (EditText) findViewById(R.id.enteredTime);
             Button myButton = (Button) findViewById(R.id.timeButton);
             findViewById(R.id.enteredTime).setVisibility(View.VISIBLE);
-            myTime.setText("" + hourOfDay + ":" + minute + " " + ampm + "");
+            myTime.setText("" + hourOfDay + ":" + modMinute + " " + ampm + "");
             myButton.setText("Change Time");
 
         }
