@@ -2,8 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:layout_marginLeft="20dp"
-    android:layout_marginTop = "20dp" android:layout_marginRight = "5dp">
+    android:layout_height="match_parent" android:layout_margin="10dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="Date:"
             android:id="@+id/textView2"
-            android:textSize="9pt"
+            android:textSize="8pt"
             android:layout_weight="1"
             android:layout_width="fill_parent" />
 
@@ -31,7 +30,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/enteredDate"
-            android:textSize="7pt" />
+            android:textSize="6pt" />
 
         <Button
             android:layout_width="wrap_content"
@@ -52,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="Time:"
             android:id="@+id/textView2"
-            android:textSize="9pt"
+            android:textSize="8pt"
             android:layout_weight="1"
             android:layout_width="fill_parent" />
 
@@ -60,7 +59,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/enteredTime"
-            android:textSize="7pt" />
+            android:textSize="6pt" />
 
         <Button
             android:layout_width="wrap_content"
@@ -82,7 +81,7 @@
             android:layout_height="wrap_content"
             android:text="Recurring:"
             android:id="@+id/textView4"
-            android:textSize="9pt"/>
+            android:textSize="8pt"/>
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -101,14 +100,15 @@
             android:layout_height="wrap_content"
             android:text="Description:"
             android:id="@+id/textView5"
-            android:textSize="9pt"/>
+            android:textSize="8pt"/>
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="10"
-            android:id="@+id/eventDescription"/>
+            android:id="@+id/eventDescription"
+            android:textSize="6pt" />
         </LinearLayout>
 
     <!-- Child linear layout with horizontal orientation -->

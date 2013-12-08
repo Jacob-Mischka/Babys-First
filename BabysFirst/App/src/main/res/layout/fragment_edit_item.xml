@@ -1,77 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <TextView
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:layout_margin="10dp">
+
+
+<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Item Details"
         android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:singleLine="true"
+        android:layout_gravity="center_horizontal"
         android:textSize="14pt" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Child linear layout with horizontal orientation -->
+    <LinearLayout android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Title:"
-        android:id="@+id/textView2"
-        android:layout_marginTop="39dp"
-        android:textSize="10pt"
-        android:layout_below="@+id/textView"
-        android:layout_alignLeft="@+id/textView" />
+        android:orientation="horizontal"
+        android:layout_marginTop="25dp">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/enteredTitle"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title:"
+            android:id="@+id/textView5"
+            android:textSize="9pt"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Comments:"
-        android:id="@+id/textView3"
-        android:textSize="10pt"
-        android:layout_below="@+id/textView2"
-        android:layout_alignRight="@+id/textView2" />
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/enteredTitle"
+            android:inputType="textMultiLine"
+            android:ems="10"/>
 
-    <EditText
-        android:layout_width="wrap_content"
+
+        </LinearLayout>
+
+    <!-- Child linear layout with horizontal orientation -->
+    <LinearLayout android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/enteredComments"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_alignLeft="@+id/enteredTitle"
-        android:layout_alignRight="@+id/enteredTitle" />
+        android:orientation="horizontal"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comments:"
+            android:id="@+id/textView5"
+            android:textSize="9pt"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/enteredComments" />
+        </LinearLayout>
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_below="@id/enteredComments"
         android:id="@+id/itemImage"
-        android:layout_centerHorizontal="true"/>
-
-
+        android:layout_gravity="center_horizontal" />
 
     <Button
         android:id="@+id/addPictureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:text="Add picture"
         android:onClick="addPicture"
-        android:layout_below="@id/itemImage"/>
+        android:layout_below="@id/itemImage"
+        android:layout_gravity="center_horizontal" />
 
-
-
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <!-- Child linear layout with horizontal orientation -->
+    <LinearLayout android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
 
         <Button
             android:layout_width="wrap_content"
@@ -79,7 +86,6 @@
             android:text="Cancel"
             android:id="@+id/cancelButton"
             android:onClick="cancelItemClick"
-            android:layout_toLeftOf="@+id/deleteButton"
             android:layout_weight="1"
             />
 
@@ -89,7 +95,6 @@
             android:text="Delete"
             android:id="@+id/deleteButton"
             android:onClick="deleteScrapbookItem"
-            android:layout_toLeftOf="@+id/saveButton"
             android:layout_weight="1"/>
 
         <Button
@@ -99,8 +104,5 @@
             android:id="@+id/saveButton"
             android:onClick="editScrapbookItem"
             android:layout_weight="1"/>
-
-
-    </LinearLayout>
-
-</RelativeLayout>
+        </LinearLayout>
+</LinearLayout>
