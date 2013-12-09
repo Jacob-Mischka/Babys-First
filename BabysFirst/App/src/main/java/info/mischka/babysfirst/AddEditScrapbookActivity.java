@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,12 +18,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.net.URLEncoder;
@@ -38,6 +42,8 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     String id, date, time, title, comments;
     String username;
     boolean addFromScrapbook = false;
+    String imageFileName = null;
+    String videoFileName = null;
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
@@ -67,6 +73,8 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                 comments = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_COMMENTS);
                 EditText enteredTitle = (EditText)findViewById(R.id.enteredTitle);
                 EditText enteredComments = (EditText)findViewById(R.id.enteredComments);
+                imageFileName = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_IMAGE);
+                videoFileName = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_IMAGE);
                 if(title != null)
                     enteredTitle.setText(title);
                 if(comments != null)
@@ -105,6 +113,13 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         }
 
 
+        if(imageFileName == null){
+            String timeStamp =
+                    new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            imageFileName = JPEG_FILE_PREFIX + timeStamp + "_" + username + JPEG_FILE_SUFFIX;
+        }
+
+
     }
 
 
@@ -125,6 +140,9 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.home){
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -132,23 +150,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     public void onResume(){
         super.onResume();
 
-        String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
-        File pictureFile = new File(getExternalFilesDir(null), imageFileName);
-        ImageView imageView = (ImageView)findViewById(R.id.itemImage);
-
-        if(pictureFile.isFile()){
-
-            imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
-            System.out.println(pictureFile.toString());
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == 0){
-            String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
+        if(imageFileName != null){
             File pictureFile = new File(getExternalFilesDir(null), imageFileName);
             ImageView imageView = (ImageView)findViewById(R.id.itemImage);
 
@@ -157,12 +159,76 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                 imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
                 System.out.println(pictureFile.toString());
             }
+        }
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 0){
+            if(imageFileName != null){
+                File pictureFile = new File(getExternalFilesDir(null), imageFileName);
+                ImageView imageView = (ImageView)findViewById(R.id.itemImage);
+
+                if(pictureFile.isFile()){
+
+                    imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
+                    System.out.println(pictureFile.toString());
+                }
+
+            }
         }
 
         else if(requestCode == 3){
+            videoFileName = getRealPathFromURI(this, data.getData());
+            final VideoView videoView = (VideoView)findViewById(R.id.itemVideo);
+            System.out.println(videoFileName);
+            videoView.setVideoPath(videoFileName);
+            videoView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    //playVideo();
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(200, 200);
+                    videoView.setLayoutParams(lp);
+                    videoView.invalidate();
+                    videoView.start();
+                    return false;
+                }
+            });
+
+        }
 
 
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public void playVideo(){
+        VideoView videoView = (VideoView)findViewById(R.id.itemVideo);
+        Intent playVideoIntent = new Intent(Intent.ACTION_VIEW);
+        if(videoFileName != null && new File(videoFileName).isFile())
+            playVideoIntent.setDataAndType(Uri.parse(videoFileName), "video/mp4");
+
+        System.out.println(Uri.parse(videoFileName).toString());
+
+        List<ResolveInfo> list = getPackageManager().queryIntentActivities(playVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if(list.size() > 0){
+           startActivity(playVideoIntent);
         }
 
 
@@ -222,6 +288,9 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         values.put("time", time);
         values.put("title", title);
         values.put("comments", comments);
+        values.put("image", imageFileName);
+        if(videoFileName != null && new File(videoFileName).isFile())
+            values.put("video", videoFileName);
         db.insert("scrapbook", null, values);
         db.close();
         finish();
@@ -247,6 +316,9 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         values.put("title", title);
         values.put("username", username);
         values.put("comments", comments);
+        values.put("image", imageFileName);
+        if(videoFileName != null && new File(videoFileName).isFile())
+            values.put("video", videoFileName);
         db.update("scrapbook", values, selection, null);
         db.close();
         finish();
@@ -260,18 +332,19 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         db.delete("scrapbook", selection, null);
         db.close();
 
-        String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
-        File pictureFile = new File(getExternalFilesDir(null), imageFileName);
-        if(pictureFile.isFile()){
-            try{
-                pictureFile.delete();
+        if(imageFileName != null){
+            File pictureFile = new File(getExternalFilesDir(null), imageFileName);
+            if(pictureFile.isFile()){
+                try{
+                    pictureFile.delete();
+
+                }
+                catch(SecurityException e){
+                    e.printStackTrace();
+
+                }
 
             }
-            catch(SecurityException e){
-                e.printStackTrace();
-
-            }
-
         }
 
         finish();
@@ -283,9 +356,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         List<ResolveInfo> list = packageManager.queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if(list.size() > 0){
-            if(id == null)
-                id = "1";
-            String imageFileName = JPEG_FILE_PREFIX + username + "_" + id + "_" + JPEG_FILE_SUFFIX;
+
             File pictureFile = new File(getExternalFilesDir(null), imageFileName);
             System.out.println(pictureFile.toString());
             try{
@@ -307,7 +378,8 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         PackageManager packageManager = getPackageManager();
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         List<ResolveInfo> list = packageManager.queryIntentActivities(takeVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
-        startActivityForResult(takeVideoIntent, 3);
+        if(list.size() > 0)
+            startActivityForResult(takeVideoIntent, 3);
 
     }
 

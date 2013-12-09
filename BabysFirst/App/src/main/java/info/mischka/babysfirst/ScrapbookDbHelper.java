@@ -16,7 +16,7 @@ public class ScrapbookDbHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db){
-        db.execSQL("CREATE TABLE scrapbook (id INTEGER PRIMARY KEY, username TEXT, date TEXT, time TEXT, title TEXT, comments TEXT);");
+        db.execSQL("CREATE TABLE scrapbook (id INTEGER PRIMARY KEY, username TEXT, image TEXT, video TEXT, date TEXT, time TEXT, title TEXT, comments TEXT);");
 
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){

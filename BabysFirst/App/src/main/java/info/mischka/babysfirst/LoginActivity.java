@@ -97,6 +97,23 @@ public class LoginActivity extends Activity {
         String[] columns = {"username", "password"};
         String selection = "username='"+username+"'";
         Cursor c = db.query("login", columns, selection, null, null, null, null);
+
+        if(username == null || username.equals("")){
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Error");
+            alertDialog.setMessage("Please enter a valid username");
+            //alertDialog.setButton(1, "OK", )
+            alertDialog.show();
+            return;
+        }
+        else if(password == null || password.equals("")){
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Error");
+            alertDialog.setMessage("Please enter a valid password");
+            //alertDialog.setButton(1, "OK", )
+            alertDialog.show();
+            return;
+        }
         if(c.getCount() != 0){
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Error");

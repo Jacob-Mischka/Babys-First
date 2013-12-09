@@ -109,6 +109,9 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.home){
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 

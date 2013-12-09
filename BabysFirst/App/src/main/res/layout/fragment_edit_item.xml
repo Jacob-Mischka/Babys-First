@@ -58,12 +58,21 @@
             android:id="@+id/enteredComments" />
         </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center">
     <ImageView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_below="@id/enteredComments"
         android:id="@+id/itemImage"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center" />
 
     <Button
         android:id="@+id/addPictureButton"
@@ -73,6 +82,23 @@
         android:onClick="addPicture"
         android:layout_below="@id/itemImage"
         android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+            <VideoView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/itemVideo"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add video"
+                android:layout_gravity="center"
+                android:onClick="addVideo"/>
+            </LinearLayout>
+    </LinearLayout>
 
     <!-- Child linear layout with horizontal orientation -->
     <LinearLayout android:layout_width="fill_parent"
