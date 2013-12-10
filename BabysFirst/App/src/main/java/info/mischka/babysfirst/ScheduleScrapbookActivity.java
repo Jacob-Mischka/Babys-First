@@ -115,6 +115,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.schedule_scrapbook, menu);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 
@@ -289,8 +290,8 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         final ArrayList<ScheduleEntry> tempEntryList = new ArrayList<ScheduleEntry>();
         String[] columns = {"id", "username", "date", "time", "description", "recurring"};
         String selection = "username='"+username+"'";
-        String sort = "date, time";
-        final Cursor c = db.query("schedule", columns, selection, null, null, null, null);
+        String orderBy = "date, time";
+        final Cursor c = db.query("schedule", columns, selection, null, null, orderBy, null);
         c.moveToFirst();
         scheduleAdapter.clear();
         for(int i = 0; i < c.getCount(); i++){
@@ -325,7 +326,8 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         final ArrayList<ScheduleEntry> tempEntryList = new ArrayList<ScheduleEntry>();
         String[] columns = {"id", "username", "date", "time", "description", "recurring"};
         String selection = "username='"+username+"'";
-        final Cursor c = db.query("schedule", columns, selection, null, null, null, null);
+        String orderBy = "date, time";
+        final Cursor c = db.query("schedule", columns, selection, null, null, null, orderBy);
         final Intent intent = new Intent(this, AddEditScheduleActivity.class);
         intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         c.moveToFirst();
@@ -473,6 +475,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
                 String comments = c.getString(c.getColumnIndexOrThrow("comments"));
                 String imageFileName = c.getString(c.getColumnIndexOrThrow("image"));
                 String videoFileName = c.getString(c.getColumnIndexOrThrow("video"));
+                System.out.println(videoFileName);
                 intent.putExtra(EVENT_ID, Integer.toString(id));
                 intent.putExtra(ADD_EDIT_TYPE, "edit");
                 intent.putExtra(EVENT_DATE, date);
@@ -488,6 +491,14 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         db.close();
         listView.setAdapter(adapter);
 
+
+    }
+
+    public void logout(MenuItem item){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
 
     }
 

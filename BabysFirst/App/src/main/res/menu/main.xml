@@ -3,37 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
     
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <item android:id="@+id/action_logout"
+        android:title="Logout"
         android:orderInCategory="100"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_search"
-        android:title="Search"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_menu_search"
-    />
-
-    <item
-        android:id="@+id/action_home"
-        android:title="Home"
         app:showAsAction="never"
-        android:icon="@drawable/masterlogo"
+        android:onClick="logout"/>
 
-    />
-    <item
-        android:id="@+id/action_schedule"
-        android:title="Schedule"
-        app:showAsAction="never"
-        android:icon="@drawable/schedulelogo"
 
-        />
-    <item
-        android:id="@+id/action_scrapbook"
-        android:title="Scrapbook"
-        app:showAsAction="never"
-        android:icon="@drawable/scrapbooklogo"
-
-        />
 </menu>

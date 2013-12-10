@@ -50,11 +50,17 @@
             android:name="info.mischka.babysfirst.AddEditScheduleActivity"
             android:label="Schedule"
             android:parentActivityName="ScheduleScrapbookActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ScheduleScrapbookActivity" />
         </activity>
         <activity
             android:name="info.mischka.babysfirst.AddEditScrapbookActivity"
             android:label="Scrapbook"
             android:parentActivityName="ScheduleScrapbookActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ScheduleScrapbookActivity" />
         </activity>
     </application>
 

@@ -97,6 +97,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_edit_schedule, menu);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 
@@ -105,6 +106,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -191,7 +193,12 @@ public class AddEditScheduleActivity extends ActionBarActivity {
             EditText myDate = (EditText) findViewById(R.id.enteredDate);
             Button myButton = (Button) findViewById(R.id.dateButton);
             findViewById(R.id.enteredDate).setVisibility(View.VISIBLE);
-            myDate.setText("" + month + "/" + day + "/" + year + "");
+            String monthString = Integer.toString(month), dayString = Integer.toString(day), yearString = Integer.toString(year);
+            if(monthString.length() < 2)
+                monthString = "0"+monthString;
+            if(dayString.length() < 2)
+                dayString = "0"+dayString;
+            myDate.setText("" + monthString + "/" + dayString + "/" + year + "");
             myButton.setText("Change Date");
         }
     }
@@ -233,10 +240,13 @@ public class AddEditScheduleActivity extends ActionBarActivity {
             {
                 modMinute = ("0" + modMinute);
             }
+            String hourString = Integer.toString(hourOfDay);
+            if(hourString.length() < 2)
+               hourString = "0"+hourString;
             EditText myTime = (EditText) findViewById(R.id.enteredTime);
             Button myButton = (Button) findViewById(R.id.timeButton);
             findViewById(R.id.enteredTime).setVisibility(View.VISIBLE);
-            myTime.setText("" + hourOfDay + ":" + modMinute + " " + ampm + "");
+            myTime.setText("" + hourString + ":" + modMinute + " " + ampm + "");
             myButton.setText("Change Time");
 
         }
@@ -296,6 +306,14 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         intent.putExtra(ScheduleScrapbookActivity.EVENT_ID, id);
         startActivity(intent);
 
+
+    }
+
+    public void logout(MenuItem item){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
 
     }
 

@@ -21,6 +21,7 @@ public class MainActivity extends ActionBarActivity {
         username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
         System.out.println(username);
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -37,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 
@@ -89,6 +91,16 @@ public class MainActivity extends ActionBarActivity {
 
     public void logout(View view){
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+    }
+
+    public void logout(MenuItem item){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
     }

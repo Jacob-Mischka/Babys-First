@@ -74,7 +74,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                 EditText enteredTitle = (EditText)findViewById(R.id.enteredTitle);
                 EditText enteredComments = (EditText)findViewById(R.id.enteredComments);
                 imageFileName = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_IMAGE);
-                videoFileName = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_IMAGE);
+                videoFileName = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_VIDEO);
                 if(title != null)
                     enteredTitle.setText(title);
                 if(comments != null)
@@ -128,6 +128,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_edit_scrapbook, menu);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 
@@ -136,12 +137,10 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
-        }
-        else if(id == R.id.home){
-            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -158,6 +157,25 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
                 imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
                 System.out.println(pictureFile.toString());
+            }
+        }
+        if(videoFileName != null){
+            File videoFile = new File(videoFileName);
+            final VideoView videoView = (VideoView)findViewById(R.id.itemVideo);
+
+            if(videoFile.isFile()){
+                videoView.setVideoPath(videoFileName);
+                videoView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if(videoView.isPlaying())
+                            videoView.pause();
+                        else
+                            videoView.start();
+                        return false;
+                    }
+                });
+                System.out.println(videoFileName);
             }
         }
     }
@@ -182,22 +200,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
         else if(requestCode == 3){
             videoFileName = getRealPathFromURI(this, data.getData());
-            final VideoView videoView = (VideoView)findViewById(R.id.itemVideo);
-            System.out.println(videoFileName);
-            videoView.setVideoPath(videoFileName);
-            videoView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                    //playVideo();
-                    //RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(200, 200);
-                    //videoView.setLayoutParams(lp);
-                   // videoView.invalidate();
-                    videoView.start();
-                    return false;
-                }
-            });
-
         }
 
 
@@ -280,6 +282,8 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
         }
 
+        System.out.println(videoFileName);
+
         SQLiteDatabase db = mScrapbookDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -311,6 +315,8 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
         String selection = "id = " + id;
         System.out.println(id);
+
+        System.out.println(videoFileName);
 
         ContentValues values = new ContentValues();
         values.put("title", title);
@@ -380,6 +386,14 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         List<ResolveInfo> list = packageManager.queryIntentActivities(takeVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if(list.size() > 0)
             startActivityForResult(takeVideoIntent, 3);
+
+    }
+
+    public void logout(MenuItem item){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
 
     }
 
