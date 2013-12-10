@@ -1,87 +1,173 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:layout_margin = "5dp"
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame" >
 
-    <!-- We should use LinearLayouts for the button and corresponding image eventually, but it's good for now-->
 
-    <ImageView
-        android:layout_width="290dp"
-        android:layout_height="144dp"
-        android:id="@+id/imageView"
-        android:layout_gravity="center_horizontal|top"
-        android:src="@drawable/masterlogoformatted"
-        android:contentDescription="@string/masterLogoDescription" />
-
-    <ImageView
-        android:layout_width="93dp"
-        android:layout_height="76dp"
-        android:id="@+id/imageView2"
-        android:layout_gravity="center|left"
-        android:src="@drawable/calendarlogo"
-        android:layout_marginLeft="35dp"
-        android:contentDescription="@string/calendarDescription"
-        android:layout_marginBottom="20dp" />
-
-    <Button
-        android:layout_width="wrap_content"
+    <!-- Child linear layout with horizontal orientation -->
+    <LinearLayout android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Schedule "
-        android:id="@+id/scheduleTxt"
-        android:layout_gravity="center"
-        android:textSize="16pt"
-        android:layout_marginLeft="50dp"
-        android:layout_marginBottom="20dp"
-        android:onClick="openSchedule"/>
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
 
-    <ImageView
-        android:layout_width="70dp"
-        android:layout_height="87dp"
-        android:id="@+id/imageView3"
-        android:layout_gravity="center"
-        android:src="@drawable/scrapbookimage"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="120dp"
-        android:contentDescription="@string/scrapbookDescription" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="B"
+            android:id="@+id/textView"
+            android:textSize="23pt"
+            android:textColor="#FF0000"
+            android:textStyle="bold"
+            android:typeface="serif" />
 
-    <Button
-        android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="A"
+            android:id="@+id/textView2"
+            android:textSize="23pt"
+            android:textStyle="bold"
+            android:textColor="#0000FF"
+            android:typeface="serif" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="B"
+            android:id="@+id/textView3"
+            android:textStyle="bold"
+            android:textSize="23pt"
+            android:typeface="serif"
+            android:textColor="#FF0000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Y"
+            android:id="@+id/textView4"
+            android:textStyle="bold"
+            android:textSize="23pt"
+            android:typeface="serif"
+            android:textColor="#FFFF00" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="'S"
+            android:id="@+id/textView5"
+            android:textSize="23pt"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textColor="#0000FF" />
+
+    </LinearLayout>
+
+    <!-- Child linear layout with horizontal orientation -->
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=" Scrapbook"
-        android:id="@+id/textView"
-        android:layout_gravity="center"
-        android:layout_marginTop="80dp"
-        android:textSize="16pt"
-        android:textIsSelectable="false"
-        android:layout_marginRight="45dp"
-        android:onClick="openScrapbook"/>
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="5dp">
 
-    <!-- I think the action bar will have the settings button on it still so I don't think we need this here actually
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Settings"
-        android:id="@+id/textView2"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="20dp"
-        android:textColor="#6666ff"
-        android:textSize="7pt" />
-        -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="F"
+            android:id="@+id/textView"
+            android:textSize="23pt"
+            android:textColor="#0000FF"
+            android:textStyle="bold"
+            android:typeface="serif" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="I"
+            android:id="@+id/textView2"
+            android:textSize="23pt"
+            android:textStyle="bold"
+            android:textColor="#FF0000"
+            android:typeface="serif" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="R"
+            android:id="@+id/textView3"
+            android:textStyle="bold"
+            android:textSize="23pt"
+            android:typeface="serif"
+            android:textColor="#FFFF00" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="S"
+            android:id="@+id/textView4"
+            android:textStyle="bold"
+            android:textSize="23pt"
+            android:typeface="serif"
+            android:textColor="#0000FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="T"
+            android:id="@+id/textView5"
+            android:textSize="23pt"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textColor="#FF0000" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" android:layout_gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Schedule "
+            android:id="@+id/scheduleTxt"
+            android:textSize="14pt"
+            android:onClick="openSchedule"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text=" Scrapbook"
+            android:id="@+id/textView"
+            android:textSize="14pt"
+            android:onClick="openScrapbook"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
         android:id="@+id/logoutButton"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="45dp"
         android:textSize="7pt"
         android:textColor="#6666ff"
-        android:onClick="logout"/>
-</FrameLayout>
+        android:onClick="logout"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
