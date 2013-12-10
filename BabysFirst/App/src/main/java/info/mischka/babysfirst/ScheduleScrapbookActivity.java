@@ -1,5 +1,6 @@
 package info.mischka.babysfirst;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ScheduleScrapbookActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -263,10 +265,22 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
     }
 
-    //class ScheduleArrayAdapter<T> extends ArrayAdapter<T>{
+    //class ScheduleArrayAdapter extends ArrayAdapter<ScheduleEntry>{
 
 
     //}
+
+    class ScrapbookArrayAdapter<T> extends ArrayAdapter<T>{
+
+        public ScrapbookArrayAdapter(Context context, int resource, List<T> list){
+            super(context, resource, list);
+
+
+        }
+
+        //public view getView
+
+    }
 
     public void refreshSchedule(View view){
         SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
@@ -275,6 +289,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         final ArrayList<ScheduleEntry> tempEntryList = new ArrayList<ScheduleEntry>();
         String[] columns = {"id", "username", "date", "time", "description", "recurring"};
         String selection = "username='"+username+"'";
+        String sort = "date, time";
         final Cursor c = db.query("schedule", columns, selection, null, null, null, null);
         c.moveToFirst();
         scheduleAdapter.clear();

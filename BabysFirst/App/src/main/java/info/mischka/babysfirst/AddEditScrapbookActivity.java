@@ -190,9 +190,9 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                 public boolean onTouch(View view, MotionEvent motionEvent) {
 
                     //playVideo();
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(200, 200);
-                    videoView.setLayoutParams(lp);
-                    videoView.invalidate();
+                    //RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(200, 200);
+                    //videoView.setLayoutParams(lp);
+                   // videoView.invalidate();
                     videoView.start();
                     return false;
                 }
