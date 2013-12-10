@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -171,6 +170,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         finish();
     }
 
+    //Dialog Fragment for the Date Picker
     public class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
@@ -207,6 +207,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
+    //Dialog Fragment for Time Picker
     public class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
 
@@ -224,7 +225,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Display Time in EditTimeField
-
+            // Add AM & PM to Display
             String ampm = "AM";
             if (hourOfDay > 12)
             {
@@ -232,6 +233,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
                 hourOfDay = hourOfDay - 12;
             }
 
+            //Add a '0' to single digit minutes
             String modMinute = Integer.toString(minute);
             int length = String.valueOf(minute).length();
 
