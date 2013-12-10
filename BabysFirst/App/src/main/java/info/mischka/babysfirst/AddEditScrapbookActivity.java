@@ -156,7 +156,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
             if(pictureFile.isFile()){
 
                 imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
-                System.out.println(pictureFile.toString());
             }
         }
         if(videoFileName != null){
@@ -175,7 +174,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                         return false;
                     }
                 });
-                System.out.println(videoFileName);
             }
         }
     }
@@ -192,7 +190,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                 if(pictureFile.isFile()){
 
                     imageView.setImageURI(new Uri.Builder().path(pictureFile.toString()).build());
-                    System.out.println(pictureFile.toString());
                 }
 
             }
@@ -226,7 +223,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         if(videoFileName != null && new File(videoFileName).isFile())
             playVideoIntent.setDataAndType(Uri.parse(videoFileName), "video/mp4");
 
-        System.out.println(Uri.parse(videoFileName).toString());
 
         List<ResolveInfo> list = getPackageManager().queryIntentActivities(playVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if(list.size() > 0){
@@ -282,7 +278,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
         }
 
-        System.out.println(videoFileName);
 
         SQLiteDatabase db = mScrapbookDbHelper.getWritableDatabase();
 
@@ -314,9 +309,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         comments = ((EditText)findViewById(R.id.enteredComments)).getText().toString();
 
         String selection = "id = " + id;
-        System.out.println(id);
-
-        System.out.println(videoFileName);
 
         ContentValues values = new ContentValues();
         values.put("title", title);
@@ -364,7 +356,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         if(list.size() > 0){
 
             File pictureFile = new File(getExternalFilesDir(null), imageFileName);
-            System.out.println(pictureFile.toString());
             try{
                 pictureFile.createNewFile();
             }

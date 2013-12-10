@@ -48,7 +48,6 @@ public class AddEditScheduleActivity extends ActionBarActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
-        System.out.println(username);
 
         if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("edit")){
             id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
@@ -265,7 +264,6 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         boolean recurring = ((CheckBox)findViewById(R.id.checkBox)).isChecked();
 
         String selection = "id = " + id;
-        System.out.println(id);
 
         ContentValues values = new ContentValues();
         values.put("date", date);

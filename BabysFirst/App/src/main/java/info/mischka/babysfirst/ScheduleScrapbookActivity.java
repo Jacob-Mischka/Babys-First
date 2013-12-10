@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,8 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -69,7 +73,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         Intent intent = getIntent();
         String scheduleScrapbookType = intent.getStringExtra(MainActivity.SCHEDULE_SCRAPBOOK_TYPE);
         username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
-        System.out.println(username);
+
 
 
         // Set up the action bar.
@@ -266,64 +270,92 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
     }
 
-    //class ScheduleArrayAdapter extends ArrayAdapter<ScheduleEntry>{
-
-
-    //}
-
-    class ScrapbookArrayAdapter<T> extends ArrayAdapter<T>{
-
-        public ScrapbookArrayAdapter(Context context, int resource, List<T> list){
-            super(context, resource, list);
-
-
+    class ScheduleArrayAdapter extends ArrayAdapter<ScheduleEntry>{
+        View view;
+        public ScheduleArrayAdapter(Context context, List<ScheduleEntry> list){
+            super(context, R.layout.schedule_row, list);
         }
 
-        //public view getView
+        @Override
+        public View getView(int pos, View convertView, ViewGroup parent){
+            view = convertView;
+            if(view == null){
+                LayoutInflater li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = li.inflate(R.layout.schedule_row, null);
+            }
+
+            if(getItem(pos).description != null){
+                TextView descView = (TextView)view.findViewById(R.id.rowEventDescription);
+                descView.setText(getItem(pos).description);
+            }
+            if(getItem(pos).date != null){
+                TextView dateView = (TextView)view.findViewById(R.id.rowEventDate);
+                dateView.setText(getItem(pos).date);
+            }
+
+
+
+            return view;
+        }
 
     }
 
-    public void refreshSchedule(View view){
-        SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
-        ArrayList<String> scheduleList = new ArrayList<String>();
-        final ArrayList<ScheduleEntry> scheduleEntryList = new ArrayList<ScheduleEntry>();
-        final ArrayList<ScheduleEntry> tempEntryList = new ArrayList<ScheduleEntry>();
-        String[] columns = {"id", "username", "date", "time", "description", "recurring"};
-        String selection = "username='"+username+"'";
-        String orderBy = "date, time";
-        final Cursor c = db.query("schedule", columns, selection, null, null, orderBy, null);
-        c.moveToFirst();
-        scheduleAdapter.clear();
-        for(int i = 0; i < c.getCount(); i++){
-            scheduleAdapter.add(c.getString(c.getColumnIndexOrThrow("description")));
+    class ScrapbookEntry{
+        String id, date, time, title, comments, image, video;
+
+
+        ScrapbookEntry(String id, String date, String time, String title, String comments, String image, String video){
+            this.id = id; this.date = date; this.time = time; this.title = title; this.comments = comments; this.image = image;  this.video = video;
 
         }
-        scheduleAdapter.notifyDataSetChanged();
-        /*
-        if(c.getCount() == 0){
-            ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scheduleList);
-            ListView listView = (ListView)view.findViewById(R.id.scheduleList);
-            listView.setAdapter(adapter);
-            return;
 
-        }
-        for(int i = 0; i < c.getCount(); i++){
-            scheduleList.add(c.getString(c.getColumnIndexOrThrow("description")));
-            tempEntryList.add(new ScheduleEntry(Integer.toString(c.getInt(c.getColumnIndexOrThrow("id"))),c.getString(c.getColumnIndexOrThrow("date")),c.getString(c.getColumnIndexOrThrow("time")),
-                    c.getString(c.getColumnIndexOrThrow("description")),c.getString(c.getColumnIndexOrThrow("recurring"))));
-            if(!c.isLast())
-                c.moveToNext();
-        }
-        */
+
 
     }
+
+    class ScrapbookArrayAdapter extends ArrayAdapter<ScrapbookEntry>{
+        View view;
+
+        public ScrapbookArrayAdapter(Context context, List<ScrapbookEntry> list){
+            super(context, R.layout.scrapbook_row, list);
+
+
+        }
+
+        @Override
+        public View getView(int pos, View convertView, ViewGroup parent){
+            view = convertView;
+            if(view == null){
+                LayoutInflater li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = li.inflate(R.layout.scrapbook_row, null);
+            }
+
+            if(getItem(pos).title != null){
+                TextView textView = (TextView)view.findViewById(R.id.rowItemTitle);
+                textView.setText(getItem(pos).title);
+            }
+
+
+            File imageFile = new File(getExternalFilesDir(null), getItem(pos).image);
+
+            if(getItem(pos).image != null && imageFile.isFile()){
+                ImageView imageView = (ImageView)view.findViewById(R.id.rowItemImage);
+                imageView.setImageURI(new Uri.Builder().path(imageFile.toString()).build());
+                imageView.setVisibility(View.VISIBLE);
+
+            }
+
+            return view;
+        }
+
+    }
+
 
 
     public void loadSchedule(View view){ //sort the results by date/time via query
         SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
         ArrayList<String> scheduleList = new ArrayList<String>();
         final ArrayList<ScheduleEntry> scheduleEntryList = new ArrayList<ScheduleEntry>();
-        final ArrayList<ScheduleEntry> tempEntryList = new ArrayList<ScheduleEntry>();
         String[] columns = {"id", "username", "date", "time", "description", "recurring"};
         String selection = "username='"+username+"'";
         String orderBy = "date, time";
@@ -340,31 +372,17 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         }
         for(int i = 0; i < c.getCount(); i++){
             scheduleList.add(c.getString(c.getColumnIndexOrThrow("description")));
-            tempEntryList.add(new ScheduleEntry(Integer.toString(c.getInt(c.getColumnIndexOrThrow("id"))),c.getString(c.getColumnIndexOrThrow("date")),c.getString(c.getColumnIndexOrThrow("time")),
+            scheduleEntryList.add(new ScheduleEntry(Integer.toString(c.getInt(c.getColumnIndexOrThrow("id"))),c.getString(c.getColumnIndexOrThrow("date")),c.getString(c.getColumnIndexOrThrow("time")),
                     c.getString(c.getColumnIndexOrThrow("description")),c.getString(c.getColumnIndexOrThrow("recurring"))));
             if(!c.isLast())
                 c.moveToNext();
         }
 
-        System.out.println(tempEntryList.size());
 
 
-        for(int i = 0; i < tempEntryList.size(); i++){
-            for(int j = 0; j < tempEntryList.size(); j++){
 
-
-                if(tempEntryList.get(i).date.compareTo(tempEntryList.get(j).date) > 0 ||
-                        ((tempEntryList.get(i).date.compareTo(tempEntryList.get(j).date) == 0) && (tempEntryList.get(i).time.compareTo(tempEntryList.get(j).time) > 0))){
-
-                    scheduleEntryList.add(0, tempEntryList.get(i));
-
-                }
-            }
-
-        }
-
-
-        ArrayAdapter adapter = new ArrayAdapter<ScheduleEntry>(this, android.R.layout.simple_list_item_1, tempEntryList);
+        //ArrayAdapter adapter = new ArrayAdapter<ScheduleEntry>(this, android.R.layout.simple_list_item_1, scheduleEntryList);
+        ScheduleArrayAdapter adapter = new ScheduleArrayAdapter(this, scheduleEntryList);
         ListView listView = (ListView)view.findViewById(R.id.scheduleList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -380,11 +398,11 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
                 */
 
 
-                String id = tempEntryList.get(i).id;
-                String date = tempEntryList.get(i).date;
-                String time = tempEntryList.get(i).time;
-                String description = tempEntryList.get(i).description;
-                String recurringString = tempEntryList.get(i).recurring;
+                String id = scheduleEntryList.get(i).id;
+                String date = scheduleEntryList.get(i).date;
+                String time = scheduleEntryList.get(i).time;
+                String description = scheduleEntryList.get(i).description;
+                String recurringString = scheduleEntryList.get(i).recurring;
 
 
 
@@ -413,60 +431,41 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
     }
 
-    public void refreshScrapbook(View view){
-        SQLiteDatabase db = mScrapbookDbHelper.getReadableDatabase();
-        ArrayList<String> scrapbookList = new ArrayList<String>();
-        String[] columns = {"id", "username", "date", "time", "title", "comments"};
-        String selection = "username='"+username+"'";
-        final Cursor c = db.query("scrapbook", columns, selection, null, null, null, null);
-        final Intent intent = new Intent(this, AddEditScrapbookActivity.class);
-        intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
-        c.moveToFirst();
-        if(c.getCount() == 0){
-            ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
-            ListView listView = (ListView)view.findViewById(R.id.scrapbookList);
-            listView.setAdapter(adapter);
-            return;
-
-        }
-        for(int i = 0; i < c.getCount(); i++){
-            scrapbookList.add(c.getString(c.getColumnIndexOrThrow("title")));
-            if(!c.isLast())
-                c.moveToNext();
-        }
-
-    }
-
     public void loadScrapbook(View view){
         SQLiteDatabase db = mScrapbookDbHelper.getReadableDatabase();
         ArrayList<String> scrapbookList = new ArrayList<String>();
+        final ArrayList<ScrapbookEntry> scrapbookEntryList = new ArrayList<ScrapbookEntry>();
         String[] columns = {"id", "username", "date", "time", "title", "comments", "image", "video"};
         String selection = "username='"+username+"'";
-        final Cursor c = db.query("scrapbook", columns, selection, null, null, null, null);
+        Cursor c = db.query("scrapbook", columns, selection, null, null, null, null);
         final Intent intent = new Intent(this, AddEditScrapbookActivity.class);
         intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
         c.moveToFirst();
         if(c.getCount() == 0){
-            ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
+            ScrapbookArrayAdapter adapter = new ScrapbookArrayAdapter(this, scrapbookEntryList);
             ListView listView = (ListView)view.findViewById(R.id.scrapbookList);
             listView.setAdapter(adapter);
             return;
 
         }
         for(int i = 0; i < c.getCount(); i++){
-            scrapbookList.add(c.getString(c.getColumnIndexOrThrow("title")));
+            //scrapbookList.add(c.getString(c.getColumnIndexOrThrow("title")));
+            scrapbookEntryList.add(new ScrapbookEntry(Integer.toString(c.getInt(c.getColumnIndexOrThrow("id"))), c.getString(c.getColumnIndexOrThrow("date")),
+                    c.getString(c.getColumnIndexOrThrow("time")), c.getString(c.getColumnIndexOrThrow("title")), c.getString(c.getColumnIndexOrThrow("comments")),
+                    c.getString(c.getColumnIndexOrThrow("image")), c.getString(c.getColumnIndexOrThrow("video"))));
             if(!c.isLast())
                 c.moveToNext();
         }
 
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
+        //ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
+        ScrapbookArrayAdapter adapter = new ScrapbookArrayAdapter(this, scrapbookEntryList);
         ListView listView = (ListView)view.findViewById(R.id.scrapbookList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-
+                /*
                 c.moveToPosition(i);
                 int id = c.getInt(c.getColumnIndexOrThrow("id"));
                 String date = c.getString(c.getColumnIndexOrThrow("date"));
@@ -475,8 +474,17 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
                 String comments = c.getString(c.getColumnIndexOrThrow("comments"));
                 String imageFileName = c.getString(c.getColumnIndexOrThrow("image"));
                 String videoFileName = c.getString(c.getColumnIndexOrThrow("video"));
-                System.out.println(videoFileName);
-                intent.putExtra(EVENT_ID, Integer.toString(id));
+                */
+
+                String id = scrapbookEntryList.get(i).id;
+                String date = scrapbookEntryList.get(i).date;
+                String time = scrapbookEntryList.get(i).time;
+                String title = scrapbookEntryList.get(i).title;
+                String comments = scrapbookEntryList.get(i).comments;
+                String imageFileName = scrapbookEntryList.get(i).image;
+                String videoFileName = scrapbookEntryList.get(i).video;
+
+                intent.putExtra(EVENT_ID, id);
                 intent.putExtra(ADD_EDIT_TYPE, "edit");
                 intent.putExtra(EVENT_DATE, date);
                 intent.putExtra(EVENT_TIME, time);

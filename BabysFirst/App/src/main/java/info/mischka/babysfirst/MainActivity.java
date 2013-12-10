@@ -19,7 +19,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
-        System.out.println(username);
 
 
         super.onCreate(savedInstanceState);
