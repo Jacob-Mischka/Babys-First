@@ -38,17 +38,11 @@ public class AddEditScheduleActivity extends ActionBarActivity {
         setContentView(R.layout.fragment_edit_event);
         mScheduleDbHelper = new ScheduleDbHelper(this);
 
-        /*
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }*/
-
         Intent intent = getIntent();
         username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
 
         if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("edit")){
+            //grabs info for event if user is brought here to edit the event
             id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
             date = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_DATE);
             time = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_TIME);
@@ -64,6 +58,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
             checkBox.setChecked(recurring);
         }
         else if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("add")){
+            //changes UI to allow adding of new entry instead of editing of existing one
             findViewById(R.id.deleteEventButton).setVisibility(View.GONE);
             Button myDateButton = (Button) findViewById(R.id.dateButton);
             Button myTimeButton = (Button) findViewById(R.id.timeButton);
@@ -129,11 +124,9 @@ public class AddEditScheduleActivity extends ActionBarActivity {
     }
 
     public void saveScheduleEvent(View view){
+        //creates a new event and saves it to the database
         String date, time, description;
         boolean recurring;
-        //String filename = "schedule";
-        //FileOutputStream fos;
-
 
         date = ((EditText)findViewById(R.id.enteredDate)).getText().toString();
         time = ((EditText)findViewById(R.id.enteredTime)).getText().toString();
@@ -165,8 +158,8 @@ public class AddEditScheduleActivity extends ActionBarActivity {
 
     }
 
-    public void cancelEventClick(View view)
-    {
+    public void cancelEventClick(View view){
+        //exits the page without committing any modified or entered data
         finish();
     }
 
@@ -233,7 +226,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
                 hourOfDay = hourOfDay - 12;
             }
 
-            //Add a '0' to single digit minutes
+            //Add a '0' to single digit minutes and hours
             String modMinute = Integer.toString(minute);
             int length = String.valueOf(minute).length();
 
@@ -259,6 +252,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
     }
 
     public void editScheduleEvent(View view){
+        //commit any changes made to an existing event to the database
         SQLiteDatabase db = mScheduleDbHelper.getWritableDatabase();
         String date = ((EditText)findViewById(R.id.enteredDate)).getText().toString();
         String time = ((EditText)findViewById(R.id.enteredTime)).getText().toString();
@@ -279,6 +273,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
     }
 
     public void deleteScheduleEvent(View view){
+        //deletes the current event from the database
         SQLiteDatabase db = mScheduleDbHelper.getWritableDatabase();
         String selection = "id = " + id;
         db.delete("schedule", selection, null);
@@ -287,16 +282,9 @@ public class AddEditScheduleActivity extends ActionBarActivity {
 
     }
 
-    /*
-    public static void deleteScheduleEvent(Context context, String id){
-        SQLiteDatabase db = new ScheduleDbHelper(context).getWritableDatabase();
-        String selection = "id = " + id;
-        db.delete("schedule", selection, null);
-        db.close();
-
-    }*/
-
     public void addToScrapbook(View view){
+        //takes information from current event and sends it to the scrapbook entry page so the user can
+        //save it in their scrapbook as well
         Intent intent = new Intent(this, AddEditScrapbookActivity.class);
         intent.putExtra(ScheduleScrapbookActivity.EVENT_DATE, date);
         intent.putExtra(ScheduleScrapbookActivity.EVENT_TIME, time);
@@ -310,6 +298,7 @@ public class AddEditScheduleActivity extends ActionBarActivity {
     }
 
     public void logout(MenuItem item){
+        //logs user out
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

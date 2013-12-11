@@ -55,17 +55,11 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         setContentView(R.layout.fragment_edit_item);
         mScrapbookDbHelper = new ScrapbookDbHelper(this);
 
-        /*
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-        */
         Intent intent = getIntent();
         username = intent.getStringExtra(LoginActivity.LOGGED_IN_USER);
         if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE) != null){
             if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("edit")){
+                //if existing entry is being edited, grabs existing data for the entry for the entry
                 id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
                 date = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_DATE);
                 time = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_TIME);
@@ -83,6 +77,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
             }
             else if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("add_from_schedule")){
+                //if being saved from a schedule entry, grabs data from schedule entry and changes ui to allow adding a new entry
                 addFromScrapbook = true;
                 id = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_ID);
                 date = intent.getStringExtra(ScheduleScrapbookActivity.EVENT_DATE);
@@ -102,6 +97,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
             }
             else if(intent.getStringExtra(ScheduleScrapbookActivity.ADD_EDIT_TYPE).equals("add")){
+                //changes ui to allow adding a new entry
                 findViewById(R.id.deleteButton).setVisibility(View.GONE);
                 findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -114,6 +110,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
 
         if(imageFileName == null){
+            //create unique image file name if one is not saved for this entry
             String timeStamp =
                     new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             imageFileName = JPEG_FILE_PREFIX + timeStamp + "_" + username + JPEG_FILE_SUFFIX;
@@ -150,6 +147,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         super.onResume();
 
         if(imageFileName != null){
+            //if there is a saved image file name and if it exists, display the image
             File pictureFile = new File(getExternalFilesDir(null), imageFileName);
             ImageView imageView = (ImageView)findViewById(R.id.itemImage);
 
@@ -159,6 +157,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
             }
         }
         if(videoFileName != null){
+            //if there is a saved video file path and if it exists, display the video
             File videoFile = new File(videoFileName);
             final VideoView videoView = (VideoView)findViewById(R.id.itemVideo);
 
@@ -184,6 +183,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
 
         if(requestCode == 0){
             if(imageFileName != null){
+                //if from picture intent, save picture filename and display picture
                 File pictureFile = new File(getExternalFilesDir(null), imageFileName);
                 ImageView imageView = (ImageView)findViewById(R.id.itemImage);
 
@@ -196,6 +196,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
         }
 
         else if(requestCode == 3){
+            //if from video intent, save video filepath
             videoFileName = getRealPathFromURI(this, data.getData());
         }
 
@@ -203,6 +204,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
+        //converts a uri to an absolute string path
         Cursor cursor = null;
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
@@ -215,21 +217,6 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
                 cursor.close();
             }
         }
-    }
-
-    public void playVideo(){
-        VideoView videoView = (VideoView)findViewById(R.id.itemVideo);
-        Intent playVideoIntent = new Intent(Intent.ACTION_VIEW);
-        if(videoFileName != null && new File(videoFileName).isFile())
-            playVideoIntent.setDataAndType(Uri.parse(videoFileName), "video/mp4");
-
-
-        List<ResolveInfo> list = getPackageManager().queryIntentActivities(playVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
-        if(list.size() > 0){
-           startActivity(playVideoIntent);
-        }
-
-
     }
 
     /**
@@ -249,11 +236,9 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     }
 
     public void saveScrapbookItem(View view){
-        boolean recurring;
-        //String filename = "schedule";
-        //FileOutputStream fos;
+        //saves new scrapbook entry
+
         if(addFromScrapbook){
-            //AddEditScheduleActivity.deleteScheduleEvent(this, id);
 
         }
         else{
@@ -299,11 +284,13 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     }
 
     public void cancelItemClick(View view){
+        //returns to schedule list without committing any additions or changes to the current entry to the database
         finish();
 
     }
 
     public void editScrapbookItem(View view){
+        //edits existing scrapbook entry
         SQLiteDatabase db = mScrapbookDbHelper.getWritableDatabase();
         title = ((EditText)findViewById(R.id.enteredTitle)).getText().toString();
         comments = ((EditText)findViewById(R.id.enteredComments)).getText().toString();
@@ -325,6 +312,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     }
 
     public void deleteScrapbookItem(View view){
+        //deletes current scrapbook entry
         SQLiteDatabase db = mScrapbookDbHelper.getWritableDatabase();
         String selection = "id = " + id;
         db.delete("scrapbook", selection, null);
@@ -350,6 +338,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     }
 
     public void addPicture(View view){
+        //sends user to activity to capture an image to save in the entry
         PackageManager packageManager = getPackageManager();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         List<ResolveInfo> list = packageManager.queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -372,6 +361,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     }
 
     public void addVideo(View view){
+        //sends user to activity to capture a video to save in the entry
         PackageManager packageManager = getPackageManager();
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         List<ResolveInfo> list = packageManager.queryIntentActivities(takeVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -381,6 +371,7 @@ public class AddEditScrapbookActivity extends ActionBarActivity {
     }
 
     public void logout(MenuItem item){
+        //logs user out
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -73,6 +73,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void openSchedule(View view){
+        //opens schedule/scrapbook activity, displaying the schedule initially
         Intent intent = new Intent(this, ScheduleScrapbookActivity.class);
         intent.putExtra(SCHEDULE_SCRAPBOOK_TYPE, "schedule");
         intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
@@ -82,6 +83,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void openScrapbook(View view){
+        //opens schedule/scrapbook activity, displaying scrapbook initially
         Intent intent = new Intent(this, ScheduleScrapbookActivity.class);
         intent.putExtra(SCHEDULE_SCRAPBOOK_TYPE, "scrapbook");
         intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
@@ -89,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void logout(View view){
+        //logs user out when button is pressed
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -97,6 +100,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void logout(MenuItem item){
+        //logs user out when menu item is selected
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

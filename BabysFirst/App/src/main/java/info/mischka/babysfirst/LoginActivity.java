@@ -46,6 +46,7 @@ public class LoginActivity extends Activity {
     }
 
     public void login(View v){
+        //logs user in with entered credentials if they exist and are entered
         String username = ((EditText)findViewById(R.id.username)).getText().toString();
         String password = ((EditText)findViewById(R.id.password)).getText().toString();
 
@@ -90,6 +91,7 @@ public class LoginActivity extends Activity {
     }
 
     public void register(View v){
+        //registers new user with entered credentials if user does not already exist and credentials are entered
         String username = ((EditText)findViewById(R.id.username)).getText().toString();
         String password = ((EditText)findViewById(R.id.password)).getText().toString();
 

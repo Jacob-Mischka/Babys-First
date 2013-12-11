@@ -182,6 +182,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
         @Override
         public CharSequence getPageTitle(int position) {
+            //sets titles for tabs
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
@@ -194,9 +195,9 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     }
 
     public class ScheduleFragment extends Fragment{
+        //custom fragment that holds the list of schedule entries
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-            //loadSchedule(getView());
 
             return inflater.inflate(R.layout.fragment_schedule, container, false);
         }
@@ -205,13 +206,14 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         @Override
         public void onResume(){
             super.onResume();
+            //reloads schedule when activity is resumed
             loadSchedule(getView());
-            //refreshSchedule(getView());
         }
 
     }
 
     public class ScrapbookFragment extends Fragment{
+        //custom fragment that holds the list of scrapbook entries
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
 
@@ -222,14 +224,14 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         @Override
         public void onResume(){
             super.onResume();
+            //reloads scrapbook when activity is resumed
             loadScrapbook(getView());
-            //refreshScrapbook(getView());
         }
 
     }
 
-    public void addEventClick(View view)
-    {
+    public void addEventClick(View view){
+        //brings user to page to add a new schedule entry
         Intent intent = new Intent(this, AddEditScheduleActivity.class);
         intent.putExtra(ADD_EDIT_TYPE, "add");
         intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
@@ -237,6 +239,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     }
 
     public void addItemClick(View view){
+        //brings user to page to add a new scrapbook entry
         Intent intent = new Intent(this, AddEditScrapbookActivity.class);
         intent.putExtra(ADD_EDIT_TYPE, "add");
         intent.putExtra(LoginActivity.LOGGED_IN_USER, username);
@@ -248,13 +251,11 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     @Override
     public void onResume(){
         super.onResume();
-        //setContentView(R.layout.fragment_schedule);
-        //loadSchedule();
-
 
     }
 
     class ScheduleEntry{
+        //class that represents a schedule entry
         String id, date, time, description, recurring;
 
         ScheduleEntry(String id, String date, String time, String description, String recurring){
@@ -271,6 +272,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     }
 
     class ScheduleArrayAdapter extends ArrayAdapter<ScheduleEntry>{
+        //custom ArrayAdapter for schedule entries
         View view;
         public ScheduleArrayAdapter(Context context, List<ScheduleEntry> list){
             super(context, R.layout.schedule_row, list);
@@ -301,6 +303,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     }
 
     class ScrapbookEntry{
+        //class that represents a scrapbook entry
         String id, date, time, title, comments, image, video;
 
 
@@ -314,6 +317,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     }
 
     class ScrapbookArrayAdapter extends ArrayAdapter<ScrapbookEntry>{
+        //custom ArrayAdapter for scrapbook entries
         View view;
 
         public ScrapbookArrayAdapter(Context context, List<ScrapbookEntry> list){
@@ -339,6 +343,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
             File imageFile = new File(getExternalFilesDir(null), getItem(pos).image);
 
             if(getItem(pos).image != null && imageFile.isFile()){
+                //shows image if it exists
                 ImageView imageView = (ImageView)view.findViewById(R.id.rowItemImage);
                 imageView.setImageURI(new Uri.Builder().path(imageFile.toString()).build());
                 imageView.setVisibility(View.VISIBLE);
@@ -352,7 +357,8 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
 
 
-    public void loadSchedule(View view){ //sort the results by date/time via query
+    public void loadSchedule(View view){
+        //rebuilds schedule ListView with new data retrieved from the database in chronological order (mostly)
         SQLiteDatabase db = mScheduleDbHelper.getReadableDatabase();
         ArrayList<String> scheduleList = new ArrayList<String>();
         final ArrayList<ScheduleEntry> scheduleEntryList = new ArrayList<ScheduleEntry>();
@@ -371,32 +377,17 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
         }
         for(int i = 0; i < c.getCount(); i++){
-            scheduleList.add(c.getString(c.getColumnIndexOrThrow("description")));
             scheduleEntryList.add(new ScheduleEntry(Integer.toString(c.getInt(c.getColumnIndexOrThrow("id"))),c.getString(c.getColumnIndexOrThrow("date")),c.getString(c.getColumnIndexOrThrow("time")),
                     c.getString(c.getColumnIndexOrThrow("description")),c.getString(c.getColumnIndexOrThrow("recurring"))));
             if(!c.isLast())
                 c.moveToNext();
         }
 
-
-
-
-        //ArrayAdapter adapter = new ArrayAdapter<ScheduleEntry>(this, android.R.layout.simple_list_item_1, scheduleEntryList);
         ScheduleArrayAdapter adapter = new ScheduleArrayAdapter(this, scheduleEntryList);
         ListView listView = (ListView)view.findViewById(R.id.scheduleList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                /*
-                c.moveToPosition(i);
-                int id = c.getInt(c.getColumnIndexOrThrow("id"));
-                String date = c.getString(c.getColumnIndexOrThrow("date"));
-                String time = c.getString(c.getColumnIndexOrThrow("time"));
-                String description = c.getString(c.getColumnIndexOrThrow("description"));
-                String recurringString = c.getString(c.getColumnIndexOrThrow("recurring"));
-                */
-
 
                 String id = scheduleEntryList.get(i).id;
                 String date = scheduleEntryList.get(i).date;
@@ -412,9 +403,6 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
                 else
                     recurring = false;
 
-
-
-                //and fix id datatype
                 intent.putExtra(EVENT_ID, id);
                 intent.putExtra(ADD_EDIT_TYPE, "edit");
                 intent.putExtra(EVENT_DATE, date);
@@ -432,8 +420,8 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     }
 
     public void loadScrapbook(View view){
+        //rebuilds scrapbook ListView with new data retrieved from the database
         SQLiteDatabase db = mScrapbookDbHelper.getReadableDatabase();
-        ArrayList<String> scrapbookList = new ArrayList<String>();
         final ArrayList<ScrapbookEntry> scrapbookEntryList = new ArrayList<ScrapbookEntry>();
         String[] columns = {"id", "username", "date", "time", "title", "comments", "image", "video"};
         String selection = "username='"+username+"'";
@@ -449,7 +437,6 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
 
         }
         for(int i = 0; i < c.getCount(); i++){
-            //scrapbookList.add(c.getString(c.getColumnIndexOrThrow("title")));
             scrapbookEntryList.add(new ScrapbookEntry(Integer.toString(c.getInt(c.getColumnIndexOrThrow("id"))), c.getString(c.getColumnIndexOrThrow("date")),
                     c.getString(c.getColumnIndexOrThrow("time")), c.getString(c.getColumnIndexOrThrow("title")), c.getString(c.getColumnIndexOrThrow("comments")),
                     c.getString(c.getColumnIndexOrThrow("image")), c.getString(c.getColumnIndexOrThrow("video"))));
@@ -458,24 +445,12 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
         }
 
 
-        //ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scrapbookList);
         ScrapbookArrayAdapter adapter = new ScrapbookArrayAdapter(this, scrapbookEntryList);
         ListView listView = (ListView)view.findViewById(R.id.scrapbookList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                /*
-                c.moveToPosition(i);
-                int id = c.getInt(c.getColumnIndexOrThrow("id"));
-                String date = c.getString(c.getColumnIndexOrThrow("date"));
-                String time = c.getString(c.getColumnIndexOrThrow("time"));
-                String title = c.getString(c.getColumnIndexOrThrow("title"));
-                String comments = c.getString(c.getColumnIndexOrThrow("comments"));
-                String imageFileName = c.getString(c.getColumnIndexOrThrow("image"));
-                String videoFileName = c.getString(c.getColumnIndexOrThrow("video"));
-                */
-
+                //when an entry in the scrapbook is selected, sends data to scrapbook edit page
                 String id = scrapbookEntryList.get(i).id;
                 String date = scrapbookEntryList.get(i).date;
                 String time = scrapbookEntryList.get(i).time;
@@ -503,6 +478,7 @@ public class ScheduleScrapbookActivity extends ActionBarActivity implements Acti
     }
 
     public void logout(MenuItem item){
+        //logs user out
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
