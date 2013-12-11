@@ -64,6 +64,8 @@ public class AddEditScheduleActivity extends ActionBarActivity {
             Button myTimeButton = (Button) findViewById(R.id.timeButton);
             EditText myDate = (EditText) findViewById(R.id.enteredDate);
             EditText myTime = (EditText) findViewById(R.id.enteredTime);
+            Button saveToScrapbookButton = (Button)findViewById(R.id.saveToScrapbookButton);
+            saveToScrapbookButton.setVisibility(View.GONE);
             myDateButton.setText("Set Date");
             myTimeButton.setText("Set Time");
             myDate.setVisibility(View.INVISIBLE);

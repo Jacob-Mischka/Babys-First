@@ -145,5 +145,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save To Scrapbook"
-        android:onClick="addToScrapbook"/>
+        android:onClick="addToScrapbook"
+        android:id="@+id/saveToScrapbookButton"/>
 </LinearLayout>
